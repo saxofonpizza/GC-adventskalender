@@ -1,0 +1,233 @@
+debug = 0
+
+
+
+
+####################################
+##          BRUKERKONTOER         ##
+####################################
+# ----    MAILBOX    ---- #
+# Påloggingsinfo for mailboks som benyttes for å motta mails, som NY GEOCACHE eller NY LOGG, fra geocaching
+IMAP_srv        = "<IMAP-mailserver>"           # IMAP-server til mailadressen som skal motta mails angående nytt utlegg eller ny logg 
+IMAP_brukernavn = '<brukernavn/mailadresse>'    # Brukernavn for å logge på IMAP-serveren
+IMAP_passord    = '<passord>'                   # Passord for å logge på IMAP-serveren
+
+# Påminnelse om publisert cache vil sendes fra SMTP_brukernavn-adressen med disse innstillingene til info_mail-adressen
+SMTP_srv        = "<SMTP-mailserver>"             # SMTP-server til mailadressen som skal sende påminnelser 
+STMP_port       = 465                             # Port for SMTP-serveren
+SMTP_brukernavn = '<brukernavn/mailadresse>'      # Brukernavn for å logge på SMTP-serveren
+SMTP_passord    = '<passord>'                     # Passord for å logge på SMTP-serveren
+info_mail       = '<mailadresse>'                 # Epostadresse hvor påminnelse om publisert cache vil sendes
+
+
+
+
+# ----    SFTP    ---- #
+sftp_hostname = '<url / sftp-server>'   # URL til sftp-serveren         
+sftp_port     = 22                      # Standard SFTP-port er: 22
+sftp_username = '<brukernavn>'          # Brukernavn til sftp-pålogging
+sftp_password = '<passord>'             # Passord til sftp-pålogging
+sftp_mappe    = '<filpath>'             # Mappe hvor X-Mjøs-filer lastes opp til!
+
+
+
+
+# Mailboks-mapper som benyttes til å sortere prosesserte mails. Viktig at mappen angis innenfor apostrofene '"<mailbox>"', f.eks. '"INBOX.Slettet"'
+# Tilgjengelige mapper kan finnes ved å kjøre mail.py-skriptet
+mailbox_Feilet           = '"<mailbox>"'            # Mailboks som fylles med mails som feiler, f.eks. hvis en mail kommer og skriptet ikke klarer å lese variabelen
+mailbox_Prosessert       = '"<mailbox>"'            # Mailboks som fylles med mails som er behandlet av skriptet og lagt inn i databasen suksessfullt
+mailbox_IKKExmjos        = '"<mailbox>"'            # Mailboks som fylles med mails som ikke er en del av XMJØS 
+mailbox_UtenforINTERVALL = '"<mailbox>"'            # Mailboks som fylles med mails som ble logget eller funnet etter endt frist spesifisert under i delen "Poenggiving"
+
+
+
+
+
+####################################
+##           Poenggiving          ##
+####################################
+# Når skal X-Mjøs-logger godtas? I hvilket intervall? (dd/mm/åååå)
+# Cacher som er funnet utenfor dette tidspunktet vil IKKE være med i poenggivingen!
+Dato_kalender_start     = "01/12/2022"      # Fra og med denne datoen registreres poeng for funn av cache
+Dato_cacheutlegg_slutt  = "24/12/2022"   # Til og med denne datoen legges det ut geocacher!
+Dato_kalender_slutt     = "31/12/2022"      # Til og med denne datoen registreres poeng for funn av cache. (Dvs om det logges funn av en cache etter denne datoen, vil man ikke få poeng!)
+Dato_xmjos_ferdig       = "06/01/2023"      # Etter denne datoen vil ikke logger lenger gi poeng og legges til! Logger som sendes inn denne datoen telles, så lenge funnet er innefor intervallet over.
+endelig_resultat        = 1                 # Denne variabelen sier noe om "endelig resultat" skal vises på nettsiden eller ikke (1 - Ja, 0 - Nei) 
+
+# Hvor mange dager etter utleggsdato skal det gis hhv. 3p, 2p? 1p gis de resterende dagene
+TRE_poeng   = 0
+TO_poeng    = 4
+Årets_år    = 2022          # Dette er året som xmjøs arrangeres og brukes for å telle riktig poeng basert på datoen folk logger
+
+# Hvor mange cacher må en person finne for å bli "streber". Event telles ikke! [std:24]
+streber_antall_cachefunn = 24
+
+
+####################################
+##        Intervall-lengde        ##
+####################################
+#Her settes lengden på hvert intervall. Til og med hvor mange dager etter utleggsdato skal intervallet gjelde?
+Intervall1 = 0
+Intervall2 = 1
+Intervall3 = 2
+Intervall4 = 3
+
+####################################
+##   Poeng for ulike intervall    ##
+####################################
+# Her bestemmes hvor mange poeng som skal gis ved ulike intervall!
+Intervall1_poeng   = 5    # Dag 1
+Intervall2_poeng   = 4    # Dag 2 
+Intervall3_poeng   = 3    # Dag 3
+Intervall4_poeng   = 2    # Dag 4
+IntervallSTD_poeng = 1    # Resten av desember (standardintervall)
+
+
+
+
+
+########################################################################################################################################################################
+##
+## VARIABLENE UNDER DENNE LINJEN BØR KUN ENDRES VED BEHOV!!!!
+##
+########################################################################################################################################################################
+
+
+####################################
+##          Eksempeldata          ##
+####################################
+# Variabel som bestemmes hvor xmjos-variablene skal hentes ifra!
+# 0 - Hent variabler fra mail
+# 1 - Benytt eksempeldata i mail-skriptet
+# 2 - Hent variabler fra HTML-fil som er lagret fra en tidligere mail, men som defineres nedenfor
+Eksempeldata = 0
+Eksempeldata_tittel         = 'X-mjøs#11 - ADSWA'        # X-Mjøs#05 - TITTEL
+Eksempeldata_nick           = 'Orangutang'        # Logget av
+Eksempeldata_dato           = '13/12/2022'        # Dato_logget eller Dato utlagt [dd/mm/åååå]
+Eksempeldata_loggtype       = "Found it"        # [Found it, Attended, Will attend]
+Eksempeldata_geocachetype   = 'Traditional Cache'        # Type geocache: [Traditional Cache, Multi-cache, Unknown (Mystery) Cache, Letterbox Hybrid, Earthcache, Wherigo Caches, Lab Cache, Virtual Cache]
+Eksempeldata_GCkode         = 'GC12345'        # GCxxxxx - 5 unike tall/bokstaver
+
+
+
+####################################
+##          Forkortelser          ##
+####################################
+# Traditional Cache
+Traditional = "TRAD"
+
+# Multi-cache
+Multi = "MULTI"
+
+# Unknown (Mystery) Cache
+Mystery = "MYST"
+
+# Letterbox Hybrid
+Letterbox = "LETTER"
+
+# Earthcache
+Earth = "EARTH"
+
+# Verigo cache
+Wherigo = "WHERI"
+
+# Lab cache
+Lab = "LAB"
+
+# Virtual cache
+Virt = "VIRT"
+
+
+
+####################################
+##             Filnavn            ##
+##     på filer som opprettes     ##
+####################################
+# Husk at disse filene kjørres inne i en unix-konteiner. Dette er med tanke på hvilken retning skråstreken skal stå
+# Det er viktig at mappene som benyttes her, opprettes i DOCKERFILEN!
+filnavn_tabell_tittel       = r"HTML/tabell_tittel.html"
+filnavn_tabell_data         = r"HTML/tabell_data.html"
+filnavn_tabell_cachetype    = r"HTML/tabell_cachetype.html"
+filnavn_HTML_komplett       = r"HTML/xmjos-2022.html"                # Endres denne, må navnet også endres i 01-install-upload.bat
+filnavn_utleggs_tabell      = r"HTML/Utlegg.html"
+filmappe_logg               = "LOGS"
+filnavn_logg                = "LOGS/log.log"
+filnavn_errlogg             = "LOGS/error.log"
+filnavn_eksempelmail_logg   = "eksempelmail-LOGG.html"               # Fil som benyttes når Eksempelmail=2, som benytter en HTML fil i stedet for å laste ned mails!
+filnavn_mail                = "mail.html"                            # Fil som benyttes når mail lastes ned fra mailboksen med mail.py-skriptet og legges i en fil
+filnavn_GRAF_antall_funn_per_dag = 'HTML/antall_funn.png'
+
+####################################
+##          Databaseinfo          ##
+####################################
+DB_user             = "root"                  # Bruker med r/w-rettigheter i databasen [std:root]
+DB_password         = "1234"                  # Passordet til brukeren                 [std:1234]
+DB_host             = "mariaDB"               # IP-adresse til DB-serveren, (localhost) kan benyttes (mariaDB benyttes hvis konteineren kjører skriptene) [std:mariaDB]
+DB_port             = 3306                    # Port databasen benytter seg av [std:3306]
+DB_database             = "xmjos"             # DATABASEN som inneholder alle tabellene [std:xmjos] 
+SQL_tabell_Nicknames    = "Nicknames"         # Tabell som inneholder alle nick
+SQL_tabell_Utlegg       = "Utlegg"            # Tabell som inneholder alle utlegg
+SQL_tabell_Logger       = "Logger"            # Tabell som inneholder alle logger
+
+
+####################################
+##          Feilmeldinger         ##
+####################################
+FEIL_161 = 'Variabelen "Nick" ble ikke hentet riktig fra denne nye utlagte cachen!'
+FEIL_162 = 'Variabelen "Geocachetype" ble ikke hentet riktig fra denne nye utlagte cachen!'
+FEIL_163 = 'Variabelen "Tittel" ble ikke hentet riktig fra denne nye utlagte cachen!'
+FEIL_164 = 'Variabelen "URL_cache" ble ikke hentet riktig fra denne nye utlagte cachen!'
+FEIL_165 = 'Variabelen "URL_nick" ble ikke hentet riktig fra denne nye utlagte cachen!'
+FEIL_271 = 'Variabelen "Nick" på en cache med Loggtype "Found it" kunne ikke hentes!'
+FEIL_272 = 'Variabelen "Loggtype" ble ikke hentet riktig fra denne loggen!'
+FEIL_273 = 'Variabelen "Dato_logget" ble ikke hentet riktig fra denne loggen!'
+FEIL_274 = 'Variabelen "URL_logg" ble ikke hentet riktig fra denne loggen!'
+FEIL_275 = 'Variabelen "URL_nick" ble ikke hentet riktig fra denne loggen!'
+FEIL_276 = """Variabelen "Nick" på en cache med Loggtype "Didn't find it" kunne ikke hentes!"""
+FEIL_277 = 'Variabelen "Nick" på en cache med Loggtype "Attended" kunne ikke hentes!'
+FEIL_278 = "Denne loggen er ikke 'Found it', 'Didn't find it' eller 'Attended'"
+
+
+
+
+
+#------------------------------------------------------------------------------------#
+##                              FORSLAG TIL XMJOS 2023                              ##
+#------------------------------------------------------------------------------------#
+
+####################################
+##          SQL-tabeller          ##
+####################################
+SQL_tabell_Logger_forslag    = "Logger_forslag"
+
+
+
+
+
+####################################
+##          Filnavn               ##
+####################################
+filnavn_tabell_tittel__forslag      = r"HTML/tabell_tittel_forslag.html"
+filnavn_tabell_data_forslag         = r"HTML/tabell_data_forslag.html"
+filnavn_tabell_cachetype_forslag    = r"HTML/tabell_cachetype_forslag.html"
+filnavn_HTML_komplett_forslag       = r"HTML/xmjos-2022_forslag.html"                   # Endres denne, må navnet også endres i 01-install-upload.bat
+filnavn_utleggs_tabell_forslag      = r"HTML/Utlegg_forslag.html"
+
+
+
+
+
+
+
+# Felles funksjoner for sjriptene. Ikke rør dette!
+# Skriver "melding" til stdout og en fil. Hvis newline er 1, vil dette gi en newline
+def logging(melding, newline_print=0, newline_fil=1):
+    if newline_print == 1:
+        print(melding + "\n")
+    else:
+        print(melding)
+    with open(filnavn_logg, 'a') as f:
+        if newline_fil == 1:
+            f.write(melding + "\n")
+        else:
+            f.write(melding)

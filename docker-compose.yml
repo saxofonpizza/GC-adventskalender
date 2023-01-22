@@ -1,0 +1,91 @@
+# Denne filen må kjøres fra der den ligger for at filpath blir riktig!
+
+# https://docs.docker.com/compose/compose-file/compose-file-v3/
+
+version: "3.9"
+
+name: x-mjos      # Lager stack-navn
+
+services:
+#-------------------------#
+# -- mariadb-KONTEINER -- #
+#-------------------------#
+  mariaDB:
+    image: "mariadb:latest"
+    container_name: mariaDB
+    volumes:
+      - mariaDB_data:/var/lib/mysql
+      - type: bind
+        source: './DB-std'
+        target: '/docker-entrypoint-initdb.d'
+    ports:
+      - 3306:3306
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: "1234"
+      TZ: "Europe/Oslo"
+
+#----------------------------#
+# -- phpmyadmin-KONTEINER -- #
+#----------------------------#
+  phpmyadmin:
+    image: "phpmyadmin:latest"
+    ports:
+      - 7000:80
+    restart: always
+    environment:
+     PMA_HOST: "mariaDB"
+      # PMA_ARBITRARY: 1
+
+#-----------------------#
+# -- xmjos-KONTEINER -- #
+#-----------------------#
+# Bør kommenteres ut ved testing for å forhindre at den fjerner mails fra innboksen som skal legges i databasen som faktist benyttes til X-Mjøs
+  xmjos:
+    image: "xmjos:latest"
+    stdin_open: true
+    volumes:
+      - type: bind
+        source: './containerfiles'
+        target: '/xmjos'
+    environment:
+      TZ: "Europe/Oslo"
+    depends_on:
+      - "mariaDB"
+    
+
+#-----------------------#
+# -- mysql-KONTEINER -- #
+#-----------------------#
+  # mysql:
+  #   image: "mysql:latest"
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   ports:
+  #     - 3307:3306
+#    network_mode: "net-xmjos"
+    # environment:
+    #   MYSQL_ROOT_PASSWORD: "1234"
+    #   MARIADB_DATABASE: "xmjos"
+  
+#------------------------#
+# -- python-KONTEINER -- #
+#------------------------#
+  # python:
+  #   image: "python:latest"
+  #   stdin_open: true
+
+
+
+#   ubuntu:
+#     image: "ubuntu:latest"
+# #    network_mode: "net-xmjos"
+#     stdin_open: true
+
+
+volumes:
+  mariaDB_data:
+  mysql_data:
+  delt_mappe:
+    external: true     #Benytter volum laget med #docker volume create
+

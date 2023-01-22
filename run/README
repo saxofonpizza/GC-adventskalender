@@ -1,0 +1,3 @@
+Skriptene i denne mappen skal kjøres fra "parent-mappen". Dvs ..\ fra denne mappen. 
+
+Alle skript starter derfor med .\run\xxxxx.ps1

@@ -1,0 +1,507 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600);
+
+
+*, *:before, *:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  margin: 1em 0.4em;
+  color:rgb(216, 216, 216);
+}
+.bakgrunnsfarge {
+  background: #105469;
+}
+body.dev{
+  background: #511010;
+}
+.gul{
+  background: #505110;
+}
+.gronn{
+  background: #125110;
+}
+
+
+/*########################################## SCOREBOARD - TABELL ##################################################*/
+/*  
+KLASSER:
+    Geocachetype    (KUN TITTEL-raden)
+    Tittel_rad      (Raden med kolonnetittler)
+    Nick_rad        (Nick-raden, Uten TITTEL-raden)
+    pl_kolonne      (Hele kolonnen)
+    nick_kolonne    (Hele kolonnen)
+    sum_kolonne     (Hele kolonnen)
+    poeng_kolonne   (Hele kolonnen)
+    poeng           (Poeng-feltet + sum, uten tittler)
+    Data            (Alle radene under tittel-linjen)
+    Event           (Kolonnene som omhandler EVENT)
+
+
+*/
+table.Scoreboard {
+  background: #012B39;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 0.25em;
+  max-width: 1400px;
+}
+
+table.Scoreboard th {
+  border-bottom: 1px solid #364043;
+  color: #E2B842;
+  font-size: 0.85em;
+  text-align: center;
+}
+table.Scoreboard td {
+  color: #fff;
+  text-align: center;
+}
+table.Scoreboard td.nick_kolonne, table.Scoreboard th.nick_kolonne{
+  text-align: left;
+}
+.nick_kolonne {
+  padding:0.1em 1em;
+  max-width: 12em;           /* Hvis nicket blir mer enn 8em, vil den fortsette på neste linje*/
+  word-wrap: break-word;    /* Ellers vil kolonnebredden være tilpasset det lengste nicket! */
+}
+.nick_rad {
+  padding:0.4em 1em;
+  border-bottom: 1px dotted rgb(82, 82, 82);
+}
+.sum_kolonne {
+  padding: 0em 0.4em;
+  border-right: 2px solid rgb(31, 31, 31);
+}
+.pl_kolonne {
+  padding: 0em 0.4em;
+  border-bottom: 1px dotted rgb(82, 82, 82);
+  border-right: 1px solid #364043;
+}
+.poeng_kolonne {
+  max-width: 50px;
+  min-width: 30px;
+  width: 50px;
+  border-left: 1px solid rgb(82, 82, 82);
+  border-right: 1px solid rgb(82, 82, 82);
+}  
+.poeng {
+  border-bottom: 1px dotted rgb(82, 82, 82);
+}
+table.Scoreboard tr.Data:nth-child(odd){
+  background: #013141;
+}
+.Geocachetype {
+  padding-bottom: 0.4em;
+  vertical-align: bottom;
+}
+.Tittel_rad {
+  border-bottom: 1px solid #364043;
+}
+table.Scoreboard tr.Data:hover {
+  background: #02445a;
+}
+table.Scoreboard .Event {
+  background: rgb(71, 50, 19);
+}
+table.Scoreboard td.Data.nick_kolonne a:link.streber, table.Scoreboard td.Data.nick_kolonne a:visited.streber, .streber {
+  color: rgb(7, 172, 7);
+}
+table.Scoreboard td.delt {
+  color: rgb(128, 128, 128);
+  /* border-top: 0px solid #364043; */
+}
+/* For LENKER     --------------------------------V */
+
+
+/*        [Geocachetype]
+    unvisited link - visited link*/
+    table.Scoreboard th.Geocachetype a:link, table.Scoreboard th.Geocachetype a:visited {
+      color: inherit;
+      text-decoration: none;
+    }
+    
+    /*    [Geocachetype]
+        mouse over link */
+    table.Scoreboard th.Geocachetype a:hover {
+      color: rgb(0, 153, 255);
+    }
+/*        [Nicknames]
+    unvisited link - visited link*/
+    table.Scoreboard td.Data.nick_kolonne a:link, table.Scoreboard td.Data.nick_kolonne a:visited {
+      color: rgb(255, 255, 255);
+      text-decoration: none;
+    }
+    
+    /*    [Nicknames]
+        mouse over link */
+    table.Scoreboard td.Data.nick_kolonne a:hover {
+      color: rgb(0, 153, 255);
+      text-decoration: underline;
+    }
+/*        [Poeng]
+    unvisited link - visited link*/
+    table.Scoreboard td.Data.poeng a:link, table.Scoreboard td.Data.poeng a:visited {
+      color: rgb(19, 155, 125);
+      text-decoration: none;
+    }
+    /*    [Poeng]
+        mouse over link */
+    table.Scoreboard td.Data.poeng a:hover {
+      color: rgb(0, 153, 255);
+      text-decoration: underline;
+    }
+
+
+
+/*########################################## UTLEGG - TABELL ##################################################*/
+/*  
+KLASSER:
+  Tittel      (TITTEL-raden)
+  Nick        (Nick-kolonnen)
+  Publisert   (Publisert-kolonnen)
+  Xmjos       (Tittel-kolonnen)
+  Bosted      (Bosted-kolonnen)
+  Data        (Alle radene under tittel-linjen)
+*/
+table.Utlegg {
+  background: #023e52;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 0.25em;
+  max-width: 1200px;
+}
+table.Utlegg th {
+  border-bottom: 1px solid #364043;
+  color: #E2B842;
+  text-align: left;
+}
+table.Utlegg td {
+  color: #fff;
+  text-align: left;
+}
+table.Utlegg .Xmjosnr{
+  text-align: right;
+}
+table.Utlegg .Nick {
+  max-width: 11em;           /* Hvis nicket blir mer enn 8em, vil den fortsette på neste linje*/
+  word-wrap: break-word;    /* Ellers vil kolonnebredden være tilpasset det lengste nicket! */
+}
+table.Utlegg .Publisert {
+  text-align: center;
+}
+table.Utlegg .Xmjos {
+  max-width: 750px;
+  width: 25em;
+}
+table.Utlegg .Bosted {
+  max-width: 250px;
+  width: 160px;
+}
+table.Utlegg .Event {
+  background: rgb(80, 53, 16);
+}
+table.Utlegg th.Tittel {
+  padding: 0.2em 16px;
+  background: #012B39;
+}
+
+table.Utlegg td.Data {
+  padding: 0.3em 1em;
+  border-bottom: 1px dotted rgb(82, 82, 82);
+}
+table.Utlegg tr.Data:hover {
+  background: #002e3d;
+}
+.tabell_footer_Utlegg{
+  max-width: 500px;
+  text-align: center;
+  font-size:0.8em;
+}
+
+/* For LENKER     --------------------------------V */
+/*        [Nicknames]
+    unvisited link - visited link*/
+table.Utlegg td.Nick.Data a:link, table.Utlegg td.Nick.Data a:visited {
+  color: rgb(255, 255, 255);
+  text-decoration: none;
+}
+
+/*    [Nicknames]
+    mouse over link */
+table.Utlegg td.Nick.Data a:hover {
+  color: rgb(0, 153, 255);
+  text-decoration: underline;
+}
+/*        [Cachetittel]
+    unvisited link - visited link */
+table.Utlegg td.Xmjos.Data a:link, table.Utlegg td.Xmjos.Data a:visited {
+  color: rgb(0, 185, 145);
+  text-decoration: none;
+}
+
+/*    [Cachetittel]
+    mouse over link */
+table.Utlegg td.Xmjos.Data a:hover {
+  color: rgb(0, 153, 255);
+  text-decoration: underline;
+}
+/* ------------------------------------------------A */
+
+
+
+
+/*########################################## OPPSUMMERINGS - TEKST ##################################################*/
+  
+div.oppsummering{
+  text-align: center;
+  max-width: 75%;
+  width: fit-content;
+  height: fit-content;
+  margin: 0 auto;
+  padding: 1em 2em;
+  color: black;
+}
+.farge_lilla {
+  background-color: rgb(117, 81, 216);
+}
+.farge_lysebla {
+  background-color: rgb(103, 255, 247);
+}
+div.oppsummering.farge_lysebla a:link, div.oppsummering.farge_lysebla a:visited {
+  color: rgb(202, 0, 168);
+	text-decoration: none;
+}
+div.oppsummering.farge_lysebla a:hover {
+  color: rgb(0, 153, 255);
+  text-decoration: underline;
+}
+div.oppsummering .antall{
+  font-size: 2em;
+  /* margin: 0 0.6em; */
+}
+div.oppsummering p {
+  /* vertical-align:middle; */
+  display: inline-block;
+}
+div.farge_svart {
+  background-color: rgb(0, 0, 0);
+  color: white;
+}
+div.oppe {
+  border-start-start-radius: 10px;
+  border-start-end-radius: 10px;
+}
+div.bunn {
+  border-end-start-radius: 10px;
+  border-end-end-radius: 10px;
+}
+
+/* Div-tabell */
+.divTable {
+	display: table;
+  margin: 0 auto;
+}
+.divTableRow {
+	display: table-row;
+}
+.divTableCell {
+	/* border: 1px solid #999999; */
+  background-color: rgb(117, 81, 216);
+	display: table-cell;
+	padding: 3px 10px;
+  text-align: center;
+}
+.divTableFoot {
+	background-color: #EEE;
+	display: table-footer-group;
+	font-weight: bold;
+}
+.divTableBody {
+	display: table-row-group;
+}
+/* ---------------------------- */
+
+
+/* ######################## LENKER ######################## */
+/* Fjerner farger og understrek på lenker */
+a:link, a:visited, a:hover {
+  /* color: inherit; */
+  color: red;                 /* Viser hvilke lenker som IKKE har fargen sin spesifikt endret ved at de blir RØDE */
+  text-decoration: none;
+}
+
+a:link, a:visited {
+	color: rgb(0, 185, 145);
+	text-decoration: none;
+}
+a:hover {
+  color: rgb(0, 153, 255);
+  text-decoration: underline;
+}
+
+
+
+table a {
+  display: block;
+}
+.footer{
+  height: 15em;
+}
+
+/* Create two equal columns that floats next to each other */
+.column1 {
+  float: left;
+  width: 45%;
+  padding: 10px;
+  text-align: right;
+  padding-right: 2em;
+}
+.column2 {
+  float: left;
+  width: 55%;
+  padding: 10px;
+  padding-left: 2em;
+}
+.column3 {
+  float: left;
+  padding: 10px;
+  text-align: right;
+}
+.row{
+    width: 50%;
+    margin: 0 auto;
+  }
+.page{
+  display: flex;
+  justify-content: center;
+}
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* ######################## KNAPP ######################## */
+.knapp {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #94590c; /* Grå */
+  border: 3px solid #000000; /* Grå */
+  color: white;
+  text-align: center;
+  font-size: 16px;
+  padding: 15px 32px;
+  max-width: 300px;
+  transition: all 0.4s;
+  cursor: pointer;
+}
+.knapp span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+.knapp span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+.knapp:hover span {
+  padding-right: 25px;
+}
+.knapp:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+hr{
+  margin-top: 4px;
+  margin-bottom: 10px;
+}
+hr.tittel1 {
+  width: 100px;
+}
+hr.tittel2 {
+  width: 50px;
+}
+p.tittel1{
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 3em;
+}
+p.tittel2{
+  font-family: 'Times New Roman', Times, serif;
+  font-size:2em;
+  margin: 10px 0 0 0;
+}
+.font_times{
+  font-family: 'Times New Roman', Times, serif;
+}
+.knapp_mellomrom{
+  margin: 0 10px;
+}
+.test{
+  color:rgb(93, 255, 107);
+}
+
+/* TIL TABELLER som bilde */
+.tabell_box{
+  width: 90%;
+}
+.tabell_antall_funn_per_cache{
+  width: 100%;
+  max-width: 1000px;
+}
+
+
+
+
+/* LITEN SKJERM */
+@media (max-width:1100px){
+  table.Scoreboard {
+    font-size: 0.75em;
+    width: 100%;
+    margin-right: 100px;
+  }
+  .nick_kolonne {
+    padding:0.1em 0.2em;
+    max-width: 18em;           /* Hvis nicket blir mer enn 4em, vil den fortsette på neste linje*/
+    word-wrap: break-word;    /* Ellers vil kolonnebredden være tilpasset det lengste nicket! */
+  }
+  .poeng_kolonne {
+    min-width: 1.5em;
+    width: 2em;
+  }
+  table.Utlegg{
+    font-size: 0.8em;
+  }
+  div.oppsummering{
+    max-width: 100%;
+    font-size: 0.8em;
+  }
+  .row{
+    width: 100%;
+    padding: 0 2em;
+  }
+  .column2{
+    max-width: 30em;
+  }
+  .normal_tekst{
+    font-size: 0.8em;
+  }
+  .knapp{
+    width: 150px;
+    padding: 10px 5px;
+  }
+  .tabell_box{
+    width: 100%;
+  }
+}

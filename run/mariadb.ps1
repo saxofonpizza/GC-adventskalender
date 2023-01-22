@@ -1,0 +1,1 @@
+Start-Process cmd -Argument "/c docker exec -it $(docker ps -aqf "name=mariaDB") bash"
