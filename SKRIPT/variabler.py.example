@@ -1,7 +1,6 @@
+# For å ta ibruk denne filen, endre filnavnet til variabler.py og endre nødvendige variabler!
+
 debug = 0
-
-
-
 
 ####################################
 ##          BRUKERKONTOER         ##
