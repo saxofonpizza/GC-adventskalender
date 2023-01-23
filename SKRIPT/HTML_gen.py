@@ -356,7 +356,7 @@ def html_generator(debugger):
 <div class="divTable">
 	<div class="divTableBody">
 		<div class="divTableRow">
-			<div class="divTableCell oppsummering oppe">&nbsp;<p><b class="antall" style="margin-right:0.6em;">114</b>nick har til nå logget en X-Mjøs-cache, og det har blitt skrevet<b class="antall" style="margin: 0 0.6em;">667</b>"funn" logger</p></div>
+			<div class="divTableCell oppsummering oppe">&nbsp;<p><b class="antall" style="margin-right:0.6em;">{Antall_nick}</b>nick har til nå logget en X-Mjøs-cache, og det har blitt skrevet<b class="antall" style="margin: 0 0.6em;">{Antall_funn_logger}</b>"funn" logger</p></div>
 		</div>
 		<div class="divTableRow">
 			<div class="divTableCell farge_svart bunn">&nbsp;RESULTATET ER ENDELIG</div>
@@ -369,7 +369,7 @@ def html_generator(debugger):
 <div class="divTable">
 	<div class="divTableBody">
 		<div class="divTableRow">
-			<div class="divTableCell oppsummering oppe bunn">&nbsp;<p><b class="antall" style="margin-right:0.6em;">114</b>nick har til nå logget en X-Mjøs-cache, og det har blitt skrevet<b class="antall" style="margin: 0 0.6em;">667</b>"funn" logger</p></div>
+			<div class="divTableCell oppsummering oppe bunn">&nbsp;<p><b class="antall" style="margin-right:0.6em;">{Antall_nick}</b>nick har til nå logget en X-Mjøs-cache, og det har blitt skrevet<b class="antall" style="margin: 0 0.6em;">{Antall_funn_logger}</b>"funn" logger</p></div>
         </div>
 	</div>
 </div>
@@ -473,8 +473,7 @@ def html_generator(debugger):
     <p style="font-size:1.5em;"><strong>Dagens X-Mjøs er ikke publisert enda!</strong></p>
 </div>    
     """
-    else:
-        print("Kalenderen ER ferdig")
+    else:       # Kalenderen er ferdig 
         TEKST2 = """<div class="oppsummering farge_lysebla oppe bunn">
     <p style="font-size:1.5em;"><strong>Alle geocacher er publisert!</strong></p>
 </div>    
