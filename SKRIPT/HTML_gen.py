@@ -24,85 +24,84 @@ def streng_rotering(forkortelse):
     return ''.join(i)
 
 # Funksjonen legger til poeng for et nick i hver celle. Funksjonen trenger å vite hvilke X-mjos-dager den skal ta for seg
-def cache(start_Xmjosnr, slutt_Xmjosnr):
+def cache(dag):
     
     # Repetiv for hver dag som går. Legger inn en dag om gangen
-    # logg_sql returnerer en liste med (nick, Xmjosnr, URL_logg, Poeng)
-    for dag in range(start_Xmjosnr,slutt_Xmjosnr+1):    
-        if i == 0:              # i er en teller, som blir 1 med en gang 1. nick er blitt gjennomført. Dette er så tittel-raden kun lages én gang
-            DB_cursor.execute(f"SELECT Geocachetype,URL FROM {v.SQL_tabell_Utlegg} WHERE Xmjosnr = '{dag}'")
-            Utlegg = DB_cursor.fetchall()
-            if len(Utlegg) > 0:
-                Geocachetype = objekt_i_liste(Utlegg,0)
-                URL_cache = Utlegg[0][1]
-            else:
-                Geocachetype = ""
-                URL_cache    = ""
-            
-            if Geocachetype == "Traditional Cache":
-                Geocachetype = v.Traditional
-            elif Geocachetype == "Multi-cache":
-                Geocachetype = v.Multi
-            elif Geocachetype == "Unknown (Mystery) Cache":
-                Geocachetype = v.Mystery
-            elif Geocachetype == "Letterbox Hybrid":
-                Geocachetype = v.Letterbox
-            elif Geocachetype == "Earthcache":
-                Geocachetype = v.Earth
-            elif Geocachetype == "Wherigo Caches":
-                Geocachetype = v.Wherigo
-            elif Geocachetype == "Lab Cache":
-                Geocachetype = v.Lab
-            elif Geocachetype == "Virtual Cache":
-                Geocachetype = v.Virt
-            else:
-                Geocachetype = ""
-
-            html_cachetype = f"""
-        <th class="poeng_kolonne Geocachetype">
-            <a href="{URL_cache}">{streng_rotering(Geocachetype)}</a>
-        </th>"""
-            fil_cachetype.write(html_cachetype)
-
-            html_tittel = f"""
-        <th class="poeng_kolonne Tittel_rad">
-            {dag}
-        </th>"""
-            fil_tabell_tittel.write(html_tittel)
-            
+    # logg_sql returnerer en liste med (nick, Xmjosnr, URL_logg, Poeng)   
+    if i == 0:              # i er en teller, som blir 1 med en gang 1. nick er blitt gjennomført. Dette er så tittel-raden kun lages én gang
+        DB_cursor.execute(f"SELECT Geocachetype,URL FROM {v.SQL_tabell_Utlegg} WHERE Xmjosnr = '{dag}'")
+        Utlegg = DB_cursor.fetchall()
+        if len(Utlegg) > 0:
+            Geocachetype = objekt_i_liste(Utlegg,0)
+            URL_cache = Utlegg[0][1]
+        else:
+            Geocachetype = ""
+            URL_cache    = ""
         
-        # Kommando som søker i både Utlegg og Logger tabellen. Utleggere får U, mens logger viser poengsum
-        logg_SQL = f"""
-        SELECT NickID,Xmjosnr,URL,"U" as Poeng
-        FROM {v.SQL_tabell_Utlegg}
-        WHERE
-            Publisert IS NOT NULL AND
-            NickID = '{NickID}' AND 
-            Xmjosnr = '{dag}' AND 
-            (
-                Geocachetype != 'Event' OR
-                Geocachetype IS NULL
-            )
-        UNION ALL
-        SELECT NickID,Xmjosnr,URL_logg,Poeng
-        FROM {v.SQL_tabell_Logger}
-        WHERE
-            Loggtype = 'Found it' AND
-            NickID = '{NickID}' AND
-            Xmjosnr = '{dag}'
-        """
-        DB_cursor.execute(logg_SQL)
-        en_logg = DB_cursor.fetchall()
-        
-        if debug == 1 and len(en_logg) > 0:
-            print(en_logg)
+        if Geocachetype == "Traditional Cache":
+            Geocachetype = v.Traditional
+        elif Geocachetype == "Multi-cache":
+            Geocachetype = v.Multi
+        elif Geocachetype == "Unknown (Mystery) Cache":
+            Geocachetype = v.Mystery
+        elif Geocachetype == "Letterbox Hybrid":
+            Geocachetype = v.Letterbox
+        elif Geocachetype == "Earthcache":
+            Geocachetype = v.Earth
+        elif Geocachetype == "Wherigo Caches":
+            Geocachetype = v.Wherigo
+        elif Geocachetype == "Lab Cache":
+            Geocachetype = v.Lab
+        elif Geocachetype == "Virtual Cache":
+            Geocachetype = v.Virt
+        else:
+            Geocachetype = ""
 
-        # Legger inn poengsummen for riktig dag
-        html_dag = f"""
-        <td class="Data poeng_kolonne poeng">
-            <a href="{objekt_i_liste(en_logg,2)}">{objekt_i_liste(en_logg,3)}</a>
-        </td>"""
-        fil_tabell_data.write(html_dag)
+        html_cachetype = f"""
+    <th class="poeng_kolonne Geocachetype">
+        <a href="{URL_cache}">{streng_rotering(Geocachetype)}</a>
+    </th>"""
+        fil_cachetype.write(html_cachetype)
+
+        html_tittel = f"""
+    <th class="poeng_kolonne Tittel_rad">
+        {dag}
+    </th>"""
+        fil_tabell_tittel.write(html_tittel)
+        
+    
+    # Kommando som søker i både Utlegg og Logger tabellen. Utleggere får U, mens logger viser poengsum
+    logg_SQL = f"""
+    SELECT NickID,Xmjosnr,URL,"U" as Poeng
+    FROM {v.SQL_tabell_Utlegg}
+    WHERE
+        Publisert IS NOT NULL AND
+        NickID = '{NickID}' AND 
+        Xmjosnr = '{dag}' AND 
+        (
+            Geocachetype != 'Event' OR
+            Geocachetype IS NULL
+        )
+    UNION ALL
+    SELECT NickID,Xmjosnr,URL_logg,Poeng
+    FROM {v.SQL_tabell_Logger}
+    WHERE
+        Loggtype = 'Found it' AND
+        NickID = '{NickID}' AND
+        Xmjosnr = '{dag}'
+    """
+    DB_cursor.execute(logg_SQL)
+    en_logg = DB_cursor.fetchall()
+    
+    if debug == 1 and len(en_logg) > 0:
+        print(en_logg)
+
+    # Legger inn poengsummen for riktig dag
+    html_dag = f"""
+    <td class="Data poeng_kolonne poeng">
+        <a href="{objekt_i_liste(en_logg,2)}">{objekt_i_liste(en_logg,3)}</a>
+    </td>"""
+    fil_tabell_data.write(html_dag)
 
 def event(eventdag):
     if i == 0:              # i er en teller, som blir 1 med en gang 1. nick er blitt gjennomført. Dette er så tittel-raden kun lages én gang
@@ -172,6 +171,7 @@ def html_generator(debugger):
     global debug
     debug = debugger
 
+    rekkefølge_utlegg = []
     current_time = dt.datetime.now().strftime("%d/%m-%Y kl. %H:%M")
     # print("Current Time =", current_time)
 
@@ -230,6 +230,8 @@ def html_generator(debugger):
 """)
     fil_utlegg.close()
     fil_utlegg = open(filnavn_utleggs_tabell, "a",encoding="utf8")
+    
+    # Rekkefølgen på utleggstabellen bestemmes av hvilken rekkefølge utleggene ligger i databasen.
     Utlegg_SQL = f"""
     SELECT Xmjosnr, N.NickID, N.Nick, N.URL_nick, Publisert, Tittel, URL, N.Bosted, Geocachetype
     FROM {v.SQL_tabell_Utlegg} U 
@@ -247,6 +249,8 @@ def html_generator(debugger):
         URL_cache   = rad[6]
         Bosted      = rad[7]
         Geocachetype = rad[8]
+
+        rekkefølge_utlegg.append((Xmjosnr,Geocachetype))
 
         if Publisert:
             Publisert = Publisert.strftime("%H:%M")
@@ -662,12 +666,14 @@ def html_generator(debugger):
         </td>"""
             fil_tabell_data.write(html_nick)
 
-        cache(1,3)       
-        event(3)
-        cache(4,14)        
-        event(14)
-        cache(15,24)       
-        
+
+        for Xmjosnr,Geocachetype in rekkefølge_utlegg:
+            if Geocachetype in "Event":
+                event(Xmjosnr)
+            else:
+                cache(Xmjosnr)
+
+
         if i == 0:
             fil_tabell_tittel.write("\n    </tr>")
             fil_cachetype.write("\n    </tr>")
