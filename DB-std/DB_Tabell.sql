@@ -107,4 +107,27 @@ CREATE TABLE `Utlegg` (
 
 -- SET GLOBAL time_zone = 'Europe/Oslo';
 
+--
+-- Tabellstruktur for tabell `Historikk`
+--
+
+CREATE TABLE `Historikk` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `NickID` int(11) NOT NULL,
+  `Loggtype` varchar(15) NOT NULL,
+  `Dato_logget` date NOT NULL,
+  `Xmjosnr` tinyint(3) UNSIGNED NOT NULL,
+  `URL_logg` text NOT NULL,
+  `Poeng` tinyint(3) UNSIGNED NOT NULL,
+  `Kommentar` text DEFAULT NULL,
+  `Registrert` datetime NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`ID`),
+  FOREIGN KEY (`NickID`)
+    REFERENCES `Nicknames` (`NickID`) 
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+
 COMMIT;
