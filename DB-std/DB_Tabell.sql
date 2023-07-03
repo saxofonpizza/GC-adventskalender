@@ -48,8 +48,8 @@ CREATE TABLE `Logger` (
   `URL_logg` text NOT NULL,
   `Poeng` tinyint UNSIGNED NOT NULL,
   `Kommentar` text DEFAULT NULL,
-  `Epost_mottatt` datetime NOT NULL,
-  `Registrert` datetime on UPDATE current_timestamp() DEFAULT current_timestamp(),
+  `Epost_mottatt` datetime NOT NULL DEFAULT current_timestamp(),
+  `Registrert` datetime NOT NULL on UPDATE current_timestamp() DEFAULT current_timestamp(),
   PRIMARY KEY (ID),
   CONSTRAINT UC_LoggingAvNick UNIQUE (NickID,Loggtype,Xmjosnr),
   FOREIGN KEY (NickID)
