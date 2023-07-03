@@ -47,8 +47,9 @@ CREATE TABLE `Logger` (
   `Xmjosnr` tinyint UNSIGNED NOT NULL,
   `URL_logg` text NOT NULL,
   `Poeng` tinyint UNSIGNED NOT NULL,
+  `Kommentar` text DEFAULT NULL,
   `Epost_mottatt` datetime NOT NULL,
-  `Registrert` datetime DEFAULT CURRENT_TIMESTAMP,
+  `Registrert` datetime on UPDATE current_timestamp() DEFAULT current_timestamp(),
   PRIMARY KEY (ID),
   CONSTRAINT UC_LoggingAvNick UNIQUE (NickID,Loggtype,Xmjosnr),
   FOREIGN KEY (NickID)
@@ -120,7 +121,7 @@ CREATE TABLE `Historikk` (
   `URL_logg` text NOT NULL,
   `Poeng` tinyint(3) UNSIGNED NOT NULL,
   `Kommentar` text DEFAULT NULL,
-  `Registrert` datetime NOT NULL DEFAULT current_timestamp(),
+  `Registrert` datetime NOT NULL,
   PRIMARY KEY (`ID`),
   FOREIGN KEY (`NickID`)
     REFERENCES `Nicknames` (`NickID`) 
