@@ -129,6 +129,17 @@ CREATE TABLE `Historikk` (
     ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Tabellstruktur for tabell `settings`
+--
 
+
+CREATE TABLE `settings` (
+  `ID` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Variabel` varchar(70) NOT NULL,
+  `Verdi` text DEFAULT NULL,
+  `Oppdatert` datetime NOT NULL on UPDATE current_timestamp() DEFAULT current_timestamp(),
+  PRIMARY KEY (ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 COMMIT;
