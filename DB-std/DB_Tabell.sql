@@ -178,7 +178,9 @@ VALUES (NULL, 'Forkortelse_Traditional'     ,'TRAD',                 'streng'   
 (NULL, 'FristLogging',              '2024-01-06',                    'dato'             ,'Dato på når det er frist å logge på nett (yyyy-mm-dd). Logger etter denne fristen vil ikke telles med i konkurransen.', current_timestamp()),
 (NULL, 'TRE_poeng',                 '0',                             'tall'             ,'Hvor mange dager etter utleggsdato skal det gis 3poeng', current_timestamp()),
 (NULL, 'TO_poeng',                  '4',                             'tall'             ,'Hvor mange dager etter utleggsdato skal det gis 2poeng (1poeng gis resterende dager)', current_timestamp()),
-(NULL, 'Årets_år',                  '2023',                          'tall'             ,'Dette er året som xmjøs arrangeres og brukes for å telle riktig poeng basert på datoen folk logger', current_timestamp())
+(NULL, 'Årets_år',                  '2023',                          'tall'             ,'Dette er året som xmjøs arrangeres og brukes for å telle riktig poeng basert på datoen folk logger', current_timestamp()),
+(NULL, 'streber_antall_cachefunn',  '24',                            'tall'             ,'Hvor mange cacher må en person finne for å bli "streber". Event telles ikke!', current_timestamp()),
+(NULL, 'tid_oppdatert_poengtabell',  NULL,                           'datetime'         ,'Tid på når forrige oppdatering av poenglisten var, enten om det har kommet ny logg, om en ny cache har blitt lagt ut eller om poeng er oppdatert. Denne variabelen vil oppdatere seg selv', current_timestamp())
 -- (NULL, '', '', '', '', current_timestamp())
 
 
