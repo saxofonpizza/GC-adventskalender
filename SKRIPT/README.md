@@ -62,6 +62,12 @@ Dette skriptet lager diagrammet for "antall funn per cache" og lagrer dette til 
 Kjøres dette skriptet direkte, vil et test-diagram opprettes!
 <br>
 <br>
+
+### watchlist.py
+Dette skriptet legger en cache til watchlist. For å fungere trenger den autentiseringscookie.
+
+<br>
+<br>
 <br>
 
 
