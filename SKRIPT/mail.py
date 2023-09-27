@@ -14,14 +14,15 @@ import imaplib
 import email
 from email.header import decode_header
 import variabler as v
+import functions as func
 import pytz
 import datetime as dt
 import smtplib, ssl                             # Brukes for å sende mails
 from email.mime.text import MIMEText            # Brukes for å sende mails
 from email.mime.multipart import MIMEMultipart  # Brukes for å sende mails
 
-mail = imaplib.IMAP4_SSL(v.IMAP_srv)
-mail.login(v.IMAP_brukernavn, v.IMAP_passord)
+mail = imaplib.IMAP4_SSL(func.Variabler['IMAP_srv'])
+mail.login(func.Variabler['IMAP_brukernavn'], func.Variabler['IMAP_passord'])
 
 
 
@@ -29,8 +30,8 @@ def send_mail_publisert (URL_cache, Tittel):
 # https://realpython.com/python-send-email/
     message = MIMEMultipart("alternative")
     message["Subject"] = "NY publisering"
-    message["From"] = v.SMTP_brukernavn
-    message["To"] = v.info_mail
+    message["From"] = func.Variabler['SMTP_brukernavn']
+    message["To"] = func.Variabler['info_mail']
 
     # Create the plain-text and HTML version of your message
     text = f"""\
@@ -64,10 +65,10 @@ Link:   {URL_cache}
 
     # Lag sikker forbindelse til serveren og send eposten!
     context = ssl.create_default_context()
-    with smtplib.SMTP_SSL(v.SMTP_srv, v.STMP_port, context=context) as server:
-        server.login(v.SMTP_brukernavn, v.IMAP_passord)
+    with smtplib.SMTP_SSL(func.Variabler['SMTP_srv'], func.Variabler['STMP_port'], context=context) as server:
+        server.login(func.Variabler['SMTP_brukernavn'], func.Variabler['IMAP_passord'])
         server.sendmail(
-            v.SMTP_brukernavn, v.info_mail, message.as_string()
+            func.Variabler['SMTP_brukernavn'], func.Variabler['info_mail'], message.as_string()
         )
 
 
@@ -128,15 +129,15 @@ def hent_subject(debug,mailID):
 
 def hent_fil_cache():           # Denne funksjonen simulerer at en HTML-fil er en mottatt mail! Brukes for DEBUGGING og TESTING
     try:
-        with open(v.filnavn_eksempelmail_logg, 'r') as f:
+        with open(func.Variabler['filnavn_eksempelmail_logg'], 'r') as f:
             f = f.read()
     except:
-        melding = f"[MAIL]   Finner ikke {v.filnavn_eksempelmail_logg}, Kjør mail.py for å generere denne filen"
+        melding = f"[MAIL]   Finner ikke {func.Variabler['filnavn_eksempelmail_logg']}, Kjør mail.py for å generere denne filen"
         v.logging(melding,0,1)
         exit()
     f = f.split("#4A3841JFD#",1)
-    subject = f[0].replace("#&NICK&#", v.Eksempeldata_nick).replace("#&TITTEL&#", v.Eksempeldata_tittel).replace("#&GEOCACHETYPE&#",v.Eksempeldata_geocachetype)
-    body    = f[1].replace("#&NICK&#",v.Eksempeldata_nick).replace("#&LOGGTYPE&#",v.Eksempeldata_loggtype).replace("#&DATO&#",v.Eksempeldata_dato).replace("#&GEOCACHETYPE&#",v.Eksempeldata_geocachetype).replace("#&GCKODE&#",v.Eksempeldata_GCkode)
+    subject = f[0].replace("#&NICK&#", func.Variabler['Eksempeldata_nick']).replace("#&TITTEL&#", func.Variabler['Eksempeldata_tittel']).replace("#&GEOCACHETYPE&#",func.Variabler['Eksempeldata_geocachetype'])
+    body    = f[1].replace("#&NICK&#",func.Variabler['Eksempeldata_nick']).replace("#&LOGGTYPE&#",func.Variabler['Eksempeldata_loggtype']).replace("#&DATO&#",func.Variabler['Eksempeldata_dato']).replace("#&GEOCACHETYPE&#",func.Variabler['Eksempeldata_geocachetype']).replace("#&GCKODE&#",func.Variabler['Eksempeldata_GCkode'])
 
     #Sette inn egne verdier:
 
@@ -224,7 +225,7 @@ def hent_mail_cache(debug, mailID):
                         except:
                             melding = "Noe er feil når det kommer til dekoding av mail-body"
                             print(melding)
-                            with open(v.filnavn_errlogg, 'a') as f:
+                            with open(func.Variabler['filnavn_errlogg'], 'a') as f:
                                 f.write(melding + "\n")
                     if debug > 1:
                         print()
@@ -281,7 +282,7 @@ def hent_variabler(subject, body):
         v.logging(melding,0,1)
 
         if NY_eller_EKSISTERENDE_cache[0] == "Ny":
-            if v.Eksempeldata == 1:
+            if func.Variabler['Eksempeldata'] == 1:
                 melding = "[MAIL]   Bruker eksempeldata for ny cache"
                 v.logging(melding,0,1)
                 # ------------------------ #
@@ -327,7 +328,7 @@ def hent_variabler(subject, body):
 
 
         elif NY_eller_EKSISTERENDE_cache[1] =="[LOG]":          # NY_eller_EKSISTERENDE_cache er 1 fordi logger-mail blir videresendt. Derdor er plass 0 "Vs:" og plass 1 "[LOG]"
-            if v.Eksempeldata == 1:
+            if func.Variabler['Eksempeldata'] == 1:
                 melding = "[MAIL]   Bruker eksempeldata for logg"
                 v.logging(melding,0,1)
                 # ------------------------ #
@@ -387,7 +388,7 @@ def hent_variabler(subject, body):
         else:         
             melding = "[MAIL]   Dette er et ukjent format på en cache, EMNE: " + subject
             print(melding)
-            with open(v.filnavn_errlogg, 'a') as f:
+            with open(func.Variabler['filnavn_errlogg'], 'a') as f:
                 f.write(melding + "\n")
             return [0,"Ukjent format"]
     else:
@@ -460,9 +461,9 @@ Dette skriptet skal ikke kjøres direkte, men importeres til et annet script!"""
                 print()
                 hent_subject(0,en_mail)
             
-            mailID = input(f"Neste prosedyre vil overskrive filen {v.filnavn_mail}. Endre filnavnet i variabler.py hvis du ikke ønsker dette!!!!\nOppgi mailID-nummeret på mailen du ønsker å legge i mail.html: {mails} ")
+            mailID = input(f"Neste prosedyre vil overskrive filen {func.Variabler['filnavn_mail']}. Endre filnavnet på variabelen 'filnavn_mail' i databasen hvis du ikke ønsker dette!!!!\nOppgi mailID-nummeret på mailen du ønsker å legge i {func.Variabler['filnavn_mail']}: {mails} ")
             mailID,subject,body=hent_mail_cache(0,mailID)
-            with open(v.filnavn_mail, 'w') as f:
+            with open(func.Variabler['filnavn_mail'], 'w') as f:
                 f.write(subject + "#4A3841JFD#\n" + body)
         mail_logout()
 else:
