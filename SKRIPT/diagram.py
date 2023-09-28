@@ -1,24 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import variabler as v
-import mariadb as mariaDB
+import functions as func
 
 def antall_funn(xakse=0,yakse=0):
-    # Lage database-forbindelse
-    try:
-        mariaDB_connection = mariaDB.connect(
-            user      = v.DB_user,
-            password  = v.DB_password,
-            host      = v.DB_host,
-            port      = v.DB_port,
-            database  = v.DB_database
-        )
-
-        # Definere en cursor
-        DB_cursor = mariaDB_connection.cursor()
-    except:
-        print("[DIAG]   Kan ikke finne databasen!")
-        exit()
+    # Definere en cursor
+    mariaDB_connection, DB_cursor = func.database_connection()
 
 
 

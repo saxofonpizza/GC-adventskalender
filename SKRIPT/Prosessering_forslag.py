@@ -4,6 +4,7 @@
 import datetime as dt
 import mariadb as mariaDB
 import variabler as v
+import functions as func
 
 
 def legg_til_logg(mailID, NickID, Loggtype, Dato_funnet, Xmjosnr, URL_logg, Epost_mottatt):
@@ -21,17 +22,17 @@ def legg_til_logg(mailID, NickID, Loggtype, Dato_funnet, Xmjosnr, URL_logg, Epos
     #                                              #
     #                                              #
     ################################################
-    Intervall1_poeng = v.Intervall1_poeng    # Dag 1
-    Intervall2_poeng = v.Intervall2_poeng    # Dag 2
-    Intervall3_poeng = v.Intervall3_poeng    # Dag 3
-    Intervall4_poeng = v.Intervall4_poeng    # Dag 4
-    IntervallSTD_poeng = v.IntervallSTD_poeng    # Resten av desember (standardintervall), gjelder til man ikke skal få poeng 
+    Intervall1_poeng = func.Variabler['Intervall1_poeng']    # Dag 1
+    Intervall2_poeng = func.Variabler['Intervall2_poeng']    # Dag 2
+    Intervall3_poeng = func.Variabler['Intervall3_poeng']    # Dag 3
+    Intervall4_poeng = func.Variabler['Intervall4_poeng']    # Dag 4
+    IntervallSTD_poeng = func.Variabler['IntervallSTD_poeng']    # Resten av desember (standardintervall), gjelder til man ikke skal få poeng 
 
     # Hvor mange dager etter utleggsdato skal poengene for hvert intervall utgis?
-    Intervall1 = v.Intervall1
-    Intervall2 = v.Intervall2
-    Intervall3 = v.Intervall3
-    Intervall4 = v.Intervall4
+    Intervall1 = func.Variabler['Intervall1']
+    Intervall2 = func.Variabler['Intervall2']
+    Intervall3 = func.Variabler['Intervall3']
+    Intervall4 = func.Variabler['Intervall4']
 
     
     if Xmjosnr == 1:
@@ -80,7 +81,7 @@ def legg_til_logg(mailID, NickID, Loggtype, Dato_funnet, Xmjosnr, URL_logg, Epos
         Poeng = 3
 
     data = f"""
-    INSERT INTO {v.SQL_tabell_Logger_forslag} (NickID, Loggtype, Dato_logget, Xmjosnr, URL_logg, Poeng, Epost_mottatt)
+    INSERT INTO Logger_forslag (NickID, Loggtype, Dato_logget, Xmjosnr, URL_logg, Poeng, Epost_mottatt)
     VALUES
         ('{NickID}',"{Loggtype}",'{Dato_funnet_dato}','{Xmjosnr}','{URL_logg}','{Poeng}', '{Epost_mottatt}')
     """
@@ -100,14 +101,5 @@ Dette skriptet skal ikke kjøres direkte, men importeres til et annet script!
     print(tekst)
 else:
     # print('[pr]     Skriptet "Prosessering" er importert på riktig måte')
-    # Lage database-forbindelse
-    mariaDB_connection = mariaDB.connect(
-        user      = v.DB_user,
-        password  = v.DB_password,
-        host      = v.DB_host,
-        port      = v.DB_port,
-        database  = v.DB_database
-    )
-
     # Definere en cursor
-    DB_cursor = mariaDB_connection.cursor()
+    mariaDB_connection, DB_cursor = func.database_connection()

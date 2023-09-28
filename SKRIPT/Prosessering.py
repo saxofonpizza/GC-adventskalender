@@ -4,25 +4,26 @@
 import datetime as dt
 import mariadb as mariaDB
 import variabler as v
+import functions as func
 import mail
 
 
 
 
 def finn_NickID(Nick, URL_nick):              # Finner NickID, og hvis nicket ikke er registrert før, opprettes en ID
-    DB_cursor.execute(f'SELECT EXISTS(SELECT * FROM {v.SQL_tabell_Nicknames} WHERE Nick = "{Nick}");')    # Returnerer 0 hvis nicket IKKE finnes, og 1 hvis det finnes
+    DB_cursor.execute(f'SELECT EXISTS(SELECT * FROM Nicknames WHERE Nick = "{Nick}");')    # Returnerer 0 hvis nicket IKKE finnes, og 1 hvis det finnes
     Nick_eksistens = DB_cursor.fetchall()[0][0]
     
     if Nick_eksistens == 1:
         
         DB_cursor.execute(f"""
             SELECT NickID 
-            FROM {v.SQL_tabell_Nicknames}
+            FROM Nicknames
             WHERE Nick = '{Nick}'""")
         NickID = DB_cursor.fetchall()[0][0]
         melding = f"[pr]     Nicket eksisterer med ID: {NickID}"
         print(melding)
-        with open(v.filnavn_logg, 'a') as f:
+        with open(func.Variabler['filnavn_logg'], 'a') as f:
             f.write(melding + "\n")
     
         return NickID
@@ -31,32 +32,32 @@ def finn_NickID(Nick, URL_nick):              # Finner NickID, og hvis nicket ik
         # Legg til Nicket
         melding = "[pr]     Nicket eksisterer IKKE, oppretter ID"
         print(melding)
-        with open(v.filnavn_logg, 'a') as f:
+        with open(func.Variabler['filnavn_logg'], 'a') as f:
             f.write(melding + "\n")
         DB_cursor.execute(f"""
-            INSERT INTO {v.SQL_tabell_Nicknames} (Nick, URL_nick)
+            INSERT INTO Nicknames (Nick, URL_nick)
             VALUES ('{Nick}','{URL_nick}')""")
         mariaDB_connection.commit()
         DB_cursor.execute(f"""
             SELECT NickID 
-            FROM {v.SQL_tabell_Nicknames}
+            FROM Nicknames
             WHERE Nick = '{Nick}'""")
         NickID = DB_cursor.fetchall()[0][0]
         melding = f"[pr]     VELLYKKET, NickID {NickID} ble opprettet!"
         print(melding)
-        with open(v.filnavn_logg, 'a') as f:
+        with open(func.Variabler['filnavn_logg'], 'a') as f:
             f.write(melding + "\n")
         return NickID
     
 
 
 def legg_til_NYcache(NickID, Publisert, Xmjosnr, Tittel, URL_cache, Geocachetype):
-    melding = f"[pr]     Rad legges til i tabellen {v.SQL_tabell_Utlegg}"
+    melding = f"[pr]     Rad legges til i tabellen Utlegg"
     print(melding)
-    with open(v.filnavn_logg, 'a') as f:
+    with open(func.Variabler['filnavn_logg'], 'a') as f:
         f.write(melding + "\n")
     data = f"""
-    UPDATE {v.SQL_tabell_Utlegg}
+    UPDATE Utlegg
     SET 
         Publisert = "{Publisert}",
         Tittel = "{Tittel}",
@@ -67,7 +68,7 @@ def legg_til_NYcache(NickID, Publisert, Xmjosnr, Tittel, URL_cache, Geocachetype
         Geocachetype != "Event"
     """
     # data = f"""
-    # INSERT INTO {v.SQL_tabell_Utlegg} (NickID, Publisert, Xmjosnr, Tittel, URL, Geocachetype, Poeng)
+    # INSERT INTO Utlegg (NickID, Publisert, Xmjosnr, Tittel, URL, Geocachetype, Poeng)
     # VALUES
     #     ('{NickID}','{Publisert}','{Xmjosnr}','{Tittel}','{URL_cache}','{Geocachetype}','3')
     # """
@@ -76,15 +77,15 @@ def legg_til_NYcache(NickID, Publisert, Xmjosnr, Tittel, URL_cache, Geocachetype
     mariaDB_connection.commit()
     melding = "[pr]     VELLYKKET"
     print(melding)
-    with open(v.filnavn_logg, 'a') as f:
+    with open(func.Variabler['filnavn_logg'], 'a') as f:
         f.write(melding + "\n")
     return
 
 
 def legg_til_logg(mailID, NickID, Loggtype, Dato_logget, Xmjosnr, URL_logg, Epost_mottatt):
-    melding = f"[pr]     Rad legges til i tabellen {v.SQL_tabell_Logger}"
+    melding = f"[pr]     Rad legges til i tabellen Logger"
     print(melding)
-    with open(v.filnavn_logg, 'a') as f:
+    with open(func.Variabler['filnavn_logg'], 'a') as f:
         f.write(melding + "\n")
     # Tabell som må opprettes for at dette skriptet skal fungere!
     # CREATE TABLE 'Logger' ('ID' INT NOT NULL AUTO_INCREMENT , 'Nick' VARCHAR(50) NOT NULL , 'Loggtype' VARCHAR(15) NOT NULL , 'Dato_logget' DATE NOT NULL , 'Xmjosnr' TINYINT UNSIGNED NOT NULL , 'URL_logg' TEXT NOT NULL , 'Poeng' TINYINT UNSIGNED NOT NULL , PRIMARY KEY ('ID')) ENGINE = InnoDB;
@@ -99,15 +100,15 @@ def legg_til_logg(mailID, NickID, Loggtype, Dato_logget, Xmjosnr, URL_logg, Epos
     ################################################
 
     # Hvor mange dager etter utleggsdato skal det gis hhv. 3p, 2p? 1p gis de resterende dagene
-    TRE_poeng   = v.TRE_poeng
-    TO_poeng    = v.TO_poeng
-    Årets_år    = v.Årets_år
+    TRE_poeng   = func.Variabler['TRE_poeng']
+    TO_poeng    = func.Variabler['TO_poeng']
+    Årets_år    = func.Variabler['Årets_år']
     Poeng       = 0                     # Må ikke fjernes eller endres!
 
     
     if Xmjosnr == 1:
-        TRE_poeng   = v.TRE_poeng+1
-        TO_poeng    = v.TO_poeng+1
+        TRE_poeng   = TRE_poeng+1
+        TO_poeng    = TO_poeng+1
     
     
     # Xmjosnr     = f"{Xmjosnr}/12/2022"
@@ -132,28 +133,28 @@ def legg_til_logg(mailID, NickID, Loggtype, Dato_logget, Xmjosnr, URL_logg, Epos
         if  (TRE_poenger_bunn) and (TRE_poenger_topp):
             melding =f"[pr]     FUNNET SAMME DAG eller innen {TRE_poeng} dag(er)!"
             print(melding)
-            with open(v.filnavn_logg, 'a') as f:
+            with open(func.Variabler['filnavn_logg'], 'a') as f:
                 f.write(melding + "\n")
             Poeng = 3
 
         elif (TO_poenger_bunn) and (TO_poenger_topp):
             melding = f"[pr]     FUNNET INNEN {TO_poeng} DAG(ER)!"
             print(melding)
-            with open(v.filnavn_logg, 'a') as f:
+            with open(func.Variabler['filnavn_logg'], 'a') as f:
                 f.write(melding + "\n")
             Poeng = 2
 
         elif (ETT_poeng_bunn) and (ETT_poeng_topp):
             melding = "[pr]     Funnet ila desember/januar!"
             print(melding)
-            with open(v.filnavn_logg, 'a') as f:
+            with open(func.Variabler['filnavn_logg'], 'a') as f:
                 f.write(melding + "\n")
             Poeng = 1
     elif str(Loggtype).lower() == "attended":
         Poeng = 3
 
     data = f"""
-    INSERT INTO {v.SQL_tabell_Logger} (NickID, Loggtype, Dato_logget, Xmjosnr, URL_logg, Poeng, Epost_mottatt)
+    INSERT INTO Logger (NickID, Loggtype, Dato_logget, Xmjosnr, URL_logg, Poeng, Epost_mottatt)
     VALUES
         ('{NickID}',"{Loggtype}",'{Dato_logget_dato}','{Xmjosnr}','{URL_logg}','{Poeng}', '{Epost_mottatt}')
     """
@@ -165,9 +166,9 @@ def legg_til_logg(mailID, NickID, Loggtype, Dato_logget, Xmjosnr, URL_logg, Epos
         v.logging (melding,0,1)
         return 1
     except:
-        melding = f"[pr]     Klarte ikke å legge til LOGG i tabellen {v.SQL_tabell_Logger}. Kan være pga. dupliserte rader (kombinasjon av nickID og Xmjosnr finnes fra før, sjekk DB)"
+        melding = f"[pr]     Klarte ikke å legge til LOGG i tabellen Logger. Kan være pga. dupliserte rader (kombinasjon av nickID og Xmjosnr finnes fra før, sjekk DB)"
         v.logging(melding,0,1)
-        mail.flytt_mail(mailID, v.mailbox_Feilet)
+        mail.flytt_mail(mailID, func.Variabler['mailbox_Feilet'])
         mail.slett_mail(v.debug,mailID)
         return 0
     
@@ -180,14 +181,6 @@ Dette skriptet skal ikke kjøres direkte, men importeres til et annet script!
     print(tekst)
 else:
     print('[pr]     Skriptet "Prosessering" er importert på riktig måte')
-    # Lage database-forbindelse
-    mariaDB_connection = mariaDB.connect(
-        user      = v.DB_user,
-        password  = v.DB_password,
-        host      = v.DB_host,
-        port      = v.DB_port,
-        database  = v.DB_database
-    )
-
+    
     # Definere en cursor
-    DB_cursor = mariaDB_connection.cursor()
+    mariaDB_connection, DB_cursor = func.database_connection()

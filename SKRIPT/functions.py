@@ -8,18 +8,23 @@ def database_connection ():
     import mariadb as mariaDB
 
     # Lage database-forbindelse
-    mariaDB_connection = mariaDB.connect(
-        user      = 'root',                     # Bruker med r/w-rettigheter i databasen [std:root]
-        password  = '1234',                     # Passordet til brukeren                 [std:1234]
-        host      = 'localhost',                # IP-adresse til DB-serveren, (localhost) kan benyttes (mariaDB benyttes hvis konteineren kjører skriptene) [std:mariaDB]
-        port      =  3306,                      # Port databasen benytter seg av [std:3306]
-        database  = 'xmjos'                     # DATABASEN som inneholder alle tabellene [std:xmjos]
-    ) 
-    
-    # Definere en cursor
-    DB_cursor = mariaDB_connection.cursor()   
+    try:
+        mariaDB_connection = mariaDB.connect(
+            user      = 'root',                     # Bruker med r/w-rettigheter i databasen [std:root]
+            password  = '1234',                     # Passordet til brukeren                 [std:1234]
+            host      = 'localhost',                # IP-adresse til DB-serveren, (localhost) kan benyttes (mariaDB benyttes hvis konteineren kjører skriptene) [std:mariaDB]
+            port      =  3306,                      # Port databasen benytter seg av [std:3306]
+            database  = 'xmjos'                     # DATABASEN som inneholder alle tabellene [std:xmjos]
+        )
 
-    return DB_cursor
+        # Definere en cursor
+        DB_cursor = mariaDB_connection.cursor()
+    except:
+        print("[FUNC]   Kan ikke finne databasen!")
+        exit()
+
+
+    return mariaDB_connection, DB_cursor
 
 # ---------------------------------------------------------------------
 

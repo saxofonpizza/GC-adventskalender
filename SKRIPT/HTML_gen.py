@@ -3,6 +3,7 @@
 import mariadb as mariaDB
 import variabler as v
 import datetime as dt
+import functions as func
 
 
 
@@ -29,7 +30,7 @@ def cache(dag):
     # Repetiv for hver dag som går. Legger inn en dag om gangen
     # logg_sql returnerer en liste med (nick, Xmjosnr, URL_logg, Poeng)   
     if i == 0:              # i er en teller, som blir 1 med en gang 1. nick er blitt gjennomført. Dette er så tittel-raden kun lages én gang
-        DB_cursor.execute(f"SELECT Geocachetype,URL FROM {v.SQL_tabell_Utlegg} WHERE Xmjosnr = '{dag}'")
+        DB_cursor.execute(f"SELECT Geocachetype,URL FROM Utlegg WHERE Xmjosnr = '{dag}'")
         Utlegg = DB_cursor.fetchall()
         if len(Utlegg) > 0:
             Geocachetype = objekt_i_liste(Utlegg,0)
@@ -39,21 +40,21 @@ def cache(dag):
             URL_cache    = ""
         
         if Geocachetype == "Traditional Cache":
-            Geocachetype = v.Traditional
+            Geocachetype = func.Variabler['Traditional']
         elif Geocachetype == "Multi-cache":
-            Geocachetype = v.Multi
+            Geocachetype = func.Variabler['Multi']
         elif Geocachetype == "Unknown (Mystery) Cache":
-            Geocachetype = v.Mystery
+            Geocachetype = func.Variabler['Mystery']
         elif Geocachetype == "Letterbox Hybrid":
-            Geocachetype = v.Letterbox
+            Geocachetype = func.Variabler['Letterbox']
         elif Geocachetype == "Earthcache":
-            Geocachetype = v.Earth
+            Geocachetype = func.Variabler['Earth']
         elif Geocachetype == "Wherigo Caches":
-            Geocachetype = v.Wherigo
+            Geocachetype = func.Variabler['Wherigo']
         elif Geocachetype == "Lab Cache":
-            Geocachetype = v.Lab
+            Geocachetype = func.Variabler['Lab']
         elif Geocachetype == "Virtual Cache":
-            Geocachetype = v.Virt
+            Geocachetype = func.Variabler['Virt']
         else:
             Geocachetype = ""
 
@@ -73,7 +74,7 @@ def cache(dag):
     # Kommando som søker i både Utlegg og Logger tabellen. Utleggere får U, mens logger viser poengsum
     logg_SQL = f"""
     SELECT NickID,Xmjosnr,URL,"U" as Poeng
-    FROM {v.SQL_tabell_Utlegg}
+    FROM Utlegg
     WHERE
         Publisert IS NOT NULL AND
         NickID = '{NickID}' AND 
@@ -84,7 +85,7 @@ def cache(dag):
         )
     UNION ALL
     SELECT NickID,Xmjosnr,URL_logg,Poeng
-    FROM {v.SQL_tabell_Logger}
+    FROM Logger
     WHERE
         Loggtype = 'Found it' AND
         NickID = '{NickID}' AND
@@ -105,7 +106,7 @@ def cache(dag):
 
 def event(eventdag):
     if i == 0:              # i er en teller, som blir 1 med en gang 1. nick er blitt gjennomført. Dette er så tittel-raden kun lages én gang
-        DB_cursor.execute(f"SELECT Geocachetype,URL FROM {v.SQL_tabell_Utlegg} WHERE Xmjosnr = '{eventdag}' AND Geocachetype = 'Event'")
+        DB_cursor.execute(f"SELECT Geocachetype,URL FROM Utlegg WHERE Xmjosnr = '{eventdag}' AND Geocachetype = 'Event'")
         Utlegg = DB_cursor.fetchall()
         if len(Utlegg) > 0:
             Geocachetype = objekt_i_liste(Utlegg,0)
@@ -126,7 +127,7 @@ def event(eventdag):
         fil_tabell_tittel.write(html_tittel)
     logg_SQL = f"""
     SELECT nickID,Xmjosnr,URL_logg,Poeng
-    FROM {v.SQL_tabell_Logger}
+    FROM Logger
     WHERE
         Loggtype = 'Attended' AND
         NickID = '{NickID}' AND
@@ -134,7 +135,7 @@ def event(eventdag):
     """
     # Legg til disse linjene i SQL-forespørselene over for å sette "U" på des om står som utlegger for events
     # SELECT NickID,Xmjosnr,URL,"U" as Poeng
-    # FROM {v.SQL_tabell_Utlegg}
+    # FROM Utlegg
     # WHERE
     #     NickID = '{NickID}' AND 
     #     Xmjosnr = '{eventdag}' AND
@@ -178,16 +179,8 @@ def html_generator(debugger):
 
     # Lage database-forbindelse
     try:
-        mariaDB_connection = mariaDB.connect(
-            user      = v.DB_user,
-            password  = v.DB_password,
-            host      = v.DB_host,
-            port      = v.DB_port,
-            database  = v.DB_database
-        )
-
-        # Definere en cursor
-        DB_cursor = mariaDB_connection.cursor()
+        mariaDB_connection, DB_cursor = func.database_connection()
+        
     except:
         print("Kan ikke finne databasen!")
         exit()
@@ -197,12 +190,14 @@ def html_generator(debugger):
 
     i=0            # Denne variabelen sikrer at tittelen på tabellen kun skrives én gang!
 
-    # Filer i dette dokumentet
-    filnavn_tabell_tittel       = v.filnavn_tabell_tittel
-    filnavn_tabell_data         = v.filnavn_tabell_data
-    filnavn_tabell_cachetype    = v.filnavn_tabell_cachetype
-    filnavn_HTML_komplett       = v.filnavn_HTML_komplett
-    filnavn_utleggs_tabell      = v.filnavn_utleggs_tabell
+    # FILER SOM BENYTTES VED GENERERING AV HTML
+    # Husk at disse filene kjørres inne i en unix-konteiner. Dette er med tanke på hvilken retning skråstreken skal stå
+    # Det er viktig at mappene som benyttes her, opprettes i DOCKERFILEN!
+    filnavn_tabell_tittel       = r"HTML/tabell_tittel.html"
+    filnavn_tabell_data         = r"HTML/tabell_data.html"
+    filnavn_tabell_cachetype    = r"HTML/tabell_cachetype.html"
+    filnavn_HTML_komplett       = r"HTML/xmjos-2022.html"                # Endres denne, må navnet også endres i 01-install-upload.bat
+    filnavn_utleggs_tabell      = r"HTML/Utlegg.html"
 
 
 #######################
@@ -234,8 +229,8 @@ def html_generator(debugger):
     # Rekkefølgen på utleggstabellen bestemmes av hvilken rekkefølge utleggene ligger i databasen.
     Utlegg_SQL = f"""
     SELECT Xmjosnr, N.NickID, N.Nick, N.URL_nick, Publisert, Tittel, URL, N.Bosted, Geocachetype
-    FROM {v.SQL_tabell_Utlegg} U 
-    INNER JOIN {v.SQL_tabell_Nicknames} N ON U.NickID = N.NickID
+    FROM Utlegg U 
+    INNER JOIN Nicknames N ON U.NickID = N.NickID
     ORDER BY Xmjosnr
     """
     DB_cursor.execute(Utlegg_SQL)   
@@ -302,7 +297,7 @@ def html_generator(debugger):
     # Finner tall på antall nick som har skrevet en funn logg
     Antall_nick_SQL = f"""
     SELECT count(DISTINCT(NickID)) as 'Antall nick som funnet cache', count(NickID) as 'Antall funn-logger'
-    FROM {v.SQL_tabell_Logger}
+    FROM Logger
     WHERE
         Loggtype = 'Found it'
 """
@@ -311,8 +306,8 @@ def html_generator(debugger):
     Antall_nick        = Oppsummeringsdata[0][0]
     Antall_funn_logger = Oppsummeringsdata[0][1]
 
-    a = v.Dato_kalender_slutt.split("/")
-    b = v.Dato_xmjos_ferdig.split("/")
+    a = func.Variabler['KonkurranseSlutt'].split("/")
+    b = func.Variabler['FristLogging'].split("/")
     Dato_kalender_slutt = f'{a[0]}/{a[1]}-{a[2]}'
     Dato_xmjos_ferdig = f'{b[0]}/{b[1]}-{b[2]}'
 
@@ -355,7 +350,7 @@ def html_generator(debugger):
 <center><i class="normal_tekst">Konkurransen gjelder t.o.m. {Dato_kalender_slutt}, og frist for logging på nett er {Dato_xmjos_ferdig}.</i></center>
 """
     
-    if v.endelig_resultat == 1:
+    if func.Variabler['EndeligResultat'] == 1:
         TEKST2 = f"""
 <div class="divTable">
 	<div class="divTableBody">
@@ -455,7 +450,7 @@ def html_generator(debugger):
         dato_dagens_dag = int(dato_idag.strftime("%d"))         # Brukes for å se etter riktig X-Mjøs
         SQL = f"""
         SELECT Publisert, Tittel, URL
-        FROM {v.SQL_tabell_Utlegg}
+        FROM Utlegg
         WHERE
             Xmjosnr = {dato_dagens_dag} and
             Geocachetype != "Event"
@@ -555,16 +550,16 @@ def html_generator(debugger):
     FROM
     (
     SELECT NickID,Poeng
-    FROM {v.SQL_tabell_Logger}
+    FROM Logger
     WHERE
         Loggtype = 'Found it' OR
         Loggtype = 'Attended'
     UNION ALL
     SELECT NickID, Poeng
-    FROM {v.SQL_tabell_Utlegg}
+    FROM Utlegg
     WHERE Publisert IS NOT NULL
     ) t
-    INNER JOIN {v.SQL_tabell_Nicknames} N
+    INNER JOIN Nicknames N
     ON N.NickID = t.NickID
     GROUP BY Nick
     ORDER BY Totalsum DESC, Antall_3poeng DESC, Antall_2poeng DESC, Antall_1poeng DESC
@@ -572,7 +567,7 @@ def html_generator(debugger):
     ## Radene under gjør så utleggerne av event listes i Scoreboard-tabellen!
     # UNION ALL
     # SELECT NickID, Poeng
-    # FROM {v.SQL_tabell_Utlegg}
+    # FROM Utlegg
     # WHERE Geocachetype = "Event"   
 
 
@@ -626,7 +621,7 @@ def html_generator(debugger):
         FROM 
         (
             SELECT NickID, Xmjosnr
-            FROM {v.SQL_tabell_Logger}
+            FROM Logger
             WHERE 
                 NickID = {NickID} AND
                 Loggtype = 'Found it'
@@ -646,7 +641,7 @@ def html_generator(debugger):
         antall_funnede_cacher = result[0][1]        # Gir tall på hvor mange cacher/utlegg personen har    
         
         # Er geocacheren en streber vil nicket få annen farge her:
-        if antall_funnede_cacher >= v.streber_antall_cachefunn:                                    #Hvis geocacheren er streber
+        if antall_funnede_cacher >= func.Variabler['streber_antall_cachefunn']:                                    #Hvis geocacheren er streber
             html_nick = f"""
         <td class="Data nick_kolonne nick_rad">
             <strong><a class="streber" href="{URL_nick}">{Nick}</a></strong>
