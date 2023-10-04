@@ -44,7 +44,7 @@ def legg_til_logg(mailID, NickID, Loggtype, Dato_funnet, Xmjosnr, URL_logg, Epos
     # Xmjosnr     = f"{Xmjosnr}/12/2022"
     # Omgjør strings til datoformat
     Dato_funnet_dato = dt.datetime.strptime(Dato_funnet, '%d/%m/%Y').date()
-    Xmjosnr_dato = dt.datetime.strptime(str(Xmjosnr) + f"/12/{v.Årets_år}", '%d/%m/%Y').date()
+    Xmjosnr_dato = dt.datetime.strptime(str(Xmjosnr) + f"/12/{func.Variabler['Årets_år']}", '%d/%m/%Y').date()
 
     # Intervaller hvor "bunn" i intervallet er tidspunktet nærmest utleggsdato og "topp" er tidspunktet lengst unna utleggsdatoen
     Intervall1_bunn = Dato_funnet_dato >=   Xmjosnr_dato                                      # Sann hvis cachen ble funnet samme dag, eller etter utleggsdato

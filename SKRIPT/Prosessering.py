@@ -23,7 +23,7 @@ def finn_NickID(Nick, URL_nick):              # Finner NickID, og hvis nicket ik
         NickID = DB_cursor.fetchall()[0][0]
         melding = f"[pr]     Nicket eksisterer med ID: {NickID}"
         print(melding)
-        with open(func.Variabler['filnavn_logg'], 'a') as f:
+        with open(v.filnavn_logg, 'a') as f:
             f.write(melding + "\n")
     
         return NickID
@@ -32,7 +32,7 @@ def finn_NickID(Nick, URL_nick):              # Finner NickID, og hvis nicket ik
         # Legg til Nicket
         melding = "[pr]     Nicket eksisterer IKKE, oppretter ID"
         print(melding)
-        with open(func.Variabler['filnavn_logg'], 'a') as f:
+        with open(v.filnavn_logg, 'a') as f:
             f.write(melding + "\n")
         DB_cursor.execute(f"""
             INSERT INTO Nicknames (Nick, URL_nick)
@@ -45,7 +45,7 @@ def finn_NickID(Nick, URL_nick):              # Finner NickID, og hvis nicket ik
         NickID = DB_cursor.fetchall()[0][0]
         melding = f"[pr]     VELLYKKET, NickID {NickID} ble opprettet!"
         print(melding)
-        with open(func.Variabler['filnavn_logg'], 'a') as f:
+        with open(v.filnavn_logg, 'a') as f:
             f.write(melding + "\n")
         return NickID
     
@@ -54,7 +54,7 @@ def finn_NickID(Nick, URL_nick):              # Finner NickID, og hvis nicket ik
 def legg_til_NYcache(NickID, Publisert, Xmjosnr, Tittel, URL_cache, Geocachetype):
     melding = f"[pr]     Rad legges til i tabellen Utlegg"
     print(melding)
-    with open(func.Variabler['filnavn_logg'], 'a') as f:
+    with open(v.filnavn_logg, 'a') as f:
         f.write(melding + "\n")
     data = f"""
     UPDATE Utlegg
@@ -77,7 +77,7 @@ def legg_til_NYcache(NickID, Publisert, Xmjosnr, Tittel, URL_cache, Geocachetype
     mariaDB_connection.commit()
     melding = "[pr]     VELLYKKET"
     print(melding)
-    with open(func.Variabler['filnavn_logg'], 'a') as f:
+    with open(v.filnavn_logg, 'a') as f:
         f.write(melding + "\n")
     return
 
@@ -85,7 +85,7 @@ def legg_til_NYcache(NickID, Publisert, Xmjosnr, Tittel, URL_cache, Geocachetype
 def legg_til_logg(mailID, NickID, Loggtype, Dato_logget, Xmjosnr, URL_logg, Epost_mottatt):
     melding = f"[pr]     Rad legges til i tabellen Logger"
     print(melding)
-    with open(func.Variabler['filnavn_logg'], 'a') as f:
+    with open(v.filnavn_logg, 'a') as f:
         f.write(melding + "\n")
     # Tabell som må opprettes for at dette skriptet skal fungere!
     # CREATE TABLE 'Logger' ('ID' INT NOT NULL AUTO_INCREMENT , 'Nick' VARCHAR(50) NOT NULL , 'Loggtype' VARCHAR(15) NOT NULL , 'Dato_logget' DATE NOT NULL , 'Xmjosnr' TINYINT UNSIGNED NOT NULL , 'URL_logg' TEXT NOT NULL , 'Poeng' TINYINT UNSIGNED NOT NULL , PRIMARY KEY ('ID')) ENGINE = InnoDB;
@@ -133,21 +133,21 @@ def legg_til_logg(mailID, NickID, Loggtype, Dato_logget, Xmjosnr, URL_logg, Epos
         if  (TRE_poenger_bunn) and (TRE_poenger_topp):
             melding =f"[pr]     FUNNET SAMME DAG eller innen {TRE_poeng} dag(er)!"
             print(melding)
-            with open(func.Variabler['filnavn_logg'], 'a') as f:
+            with open(v.filnavn_logg, 'a') as f:
                 f.write(melding + "\n")
             Poeng = 3
 
         elif (TO_poenger_bunn) and (TO_poenger_topp):
             melding = f"[pr]     FUNNET INNEN {TO_poeng} DAG(ER)!"
             print(melding)
-            with open(func.Variabler['filnavn_logg'], 'a') as f:
+            with open(v.filnavn_logg, 'a') as f:
                 f.write(melding + "\n")
             Poeng = 2
 
         elif (ETT_poeng_bunn) and (ETT_poeng_topp):
             melding = "[pr]     Funnet ila desember/januar!"
             print(melding)
-            with open(func.Variabler['filnavn_logg'], 'a') as f:
+            with open(v.filnavn_logg, 'a') as f:
                 f.write(melding + "\n")
             Poeng = 1
     elif str(Loggtype).lower() == "attended":

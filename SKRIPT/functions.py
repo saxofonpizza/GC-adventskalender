@@ -38,7 +38,7 @@ def hent_variabler():
     SELECT Variabel,Verdi
     FROM settings
     """
-    DB_cursor = database_connection()
+    mariaDB_connection, DB_cursor = database_connection()
     DB_cursor.execute(sql)
     sql_data = DB_cursor.fetchall()
 

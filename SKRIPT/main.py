@@ -7,9 +7,18 @@ import Prosessering_forslag as pr_forslag   # For utregning av poeng og, legge d
 from HTML_gen import html_generator         # For generering av en HTML-fil med data fra databasen
 from HTML_gen_forslag import html_generator as html_generator_forslag # For generering av en HTML-fil med data fra databasen, gjelder et forlsag for utregning i 2023
 import variabler as v
+import functions as func
 import datetime as dt
 import diagram
 
+
+# Lage database-forbindelse
+try:
+    mariaDB_connection, DB_cursor = func.database_connection()
+    
+except:
+    print("Kan ikke finne databasen!")
+    exit()
 
 
 
@@ -45,7 +54,7 @@ for mailID in mailIDs:
     melding = "MAIL NR: " + str(i)
     v.logging(melding,0,1) 
 
-    if v.Eksempeldata == 2:
+    if func.Variabler['Eksempeldata'] == 2:
         melding = "Eksempeldata er påskrudd! [2]"
         v.logging(melding,0,0)
         Epost_mottatt = dt.datetime.now()-dt.timedelta(hours=2, minutes=30)
@@ -53,7 +62,7 @@ for mailID in mailIDs:
     else:
         Epost_mottatt,subject,body = mail.hent_mail_cache(v.debug, mailID)      #Hvis denne returnerer en error, vil neste if-setning kjøre da?
 
-    Dato_xmjos_ferdig = dt.datetime.strptime(v.Dato_xmjos_ferdig, '%d/%m/%Y').date()    
+    Dato_xmjos_ferdig = dt.datetime.strptime(func.Variabler['FristLogging'], '%Y-%m-%d').date()    
     if Epost_mottatt.date() <= Dato_xmjos_ferdig:                              # Er cachen logget INNEN fristen?
         variabler = mail.hent_variabler(subject,body)                          #Hvis denne returnerer en error, vil neste if-setning kjøre da?
         melding = "[MAIN]   Variabler fra mail-script: " + str(variabler)
@@ -79,7 +88,7 @@ for mailID in mailIDs:
             NickID = pr.finn_NickID(Nick,URL_nick)                                                           # Finner NickID, og hvis nicket ikke er registrert før, opprettes en ID
             pr.legg_til_NYcache(NickID, Epost_mottatt, Xmjosnr, Tittel, URL_cache, Geocachetype)        #Legger dataen i en database
             # mail.marker_mail_lest(v.debug,mailID)
-            mail.flytt_mail(mailID, v.mailbox_Prosessert)
+            mail.flytt_mail(mailID, func.Variabler['mailbox_Prosessert'])
             mail.slett_mail(v.debug,mailID)
             # HTML_endret = 1
 
@@ -93,15 +102,15 @@ for mailID in mailIDs:
 
             # Er cachen funnet i INTERVALLET angitt i variabler.py (i desember)?
             # Isåfall skal ikke loggen telles i poenggivingen!
-            Dato_kalender_start = dt.datetime.strptime(v.Dato_kalender_start, '%d/%m/%Y').date()
-            Dato_kalender_slutt = dt.datetime.strptime(v.Dato_kalender_slutt, '%d/%m/%Y').date()
+            Dato_kalender_start = dt.datetime.strptime(func.Variabler['KonkurranseStart'], '%Y-%m-%d').date()
+            Dato_kalender_slutt = dt.datetime.strptime(func.Variabler['KonkurranseSlutt'], '%Y-%m-%d').date()
             Dato_logget_dato = dt.datetime.strptime(Dato_funnet, '%d/%m/%Y').date()
             if Dato_kalender_start <= Dato_logget_dato <= Dato_kalender_slutt:
                 NickID = pr.finn_NickID(Nick,URL_nick)                                             # Finner NickID, og hvis nicket ikke er registrert før, opprettes en ID
                 vellykket = pr.legg_til_logg(mailID, NickID, Loggtype, Dato_funnet, Xmjosnr, URL_logg, Epost_mottatt)        #Legger dataen i en database
                 if vellykket:
                     mail.marker_mail_lest(v.debug,mailID)
-                    mail.flytt_mail(mailID, v.mailbox_Prosessert)
+                    mail.flytt_mail(mailID, func.Variabler['mailbox_Prosessert'])
                     mail.slett_mail(v.debug,mailID)
                     try:
                         # Legg til i Logg_forslag-tabellen!
@@ -114,7 +123,7 @@ for mailID in mailIDs:
 
             else:
                 mail.marker_mail_lest(v.debug,mailID)
-                mail.flytt_mail(mailID, v.mailbox_UtenforINTERVALL)
+                mail.flytt_mail(mailID, func.Variabler['mailbox_UtenforINTERVALL'])
                 mail.slett_mail(v.debug,mailID)
 
             
@@ -155,7 +164,7 @@ for mailID in mailIDs:
             
             # FLYTT MAIL TIL EGEN FEILET-MAPPE?
             # Viktig at emnet (evt mial mottatt) blir loggført til en fil så man kan finne riktig mail for feilsøking :D
-            mail.flytt_mail(mailID, v.mailbox_Feilet)
+            mail.flytt_mail(mailID, func.Variabler['mailbox_Feilet'])
             mail.slett_mail(v.debug,mailID)
             melding = '[MAIN]   VELLYKKET, registrering av FEIL'
             v.logging(melding,0,1)
@@ -164,14 +173,14 @@ for mailID in mailIDs:
             melding = "[MAIN]   Ingen rader blir lagt til databasen ettersom mailen IKKE er en NY cache eller en LOGG!"
             v.logging(melding,0,1)
             mail.marker_mail_lest(v.debug,mailID)
-            mail.flytt_mail(mailID, v.mailbox_IKKExmjos)
+            mail.flytt_mail(mailID, func.Variabler['mailbox_IKKExmjos'])
             mail.slett_mail(v.debug,mailID)
             melding = '[MAIN]   VELLYKKET, registrering av mail som ikke er en del av X-Mjøs'
             v.logging(melding,0,1)
 
         print()
-        if v.Eksempeldata == 2:
-            melding = f'[MAIN]   Skriptet slutter fordi Eksempeldata=2, og det eksisterer kun én "{v.filnavn_eksempelmail_logg}"-fil\n'
+        if func.Variabler['Eksempeldata'] == 2:
+            melding = f"""[MAIN]   Skriptet slutter fordi Eksempeldata=2, og det eksisterer kun én "{func.Variabler['filnavn_eksempelmail_logg']}"-fil\n"""
             v.logging(melding,0,1)
             exit()
         # if HTML_endret:
@@ -209,16 +218,19 @@ melding = "[MAIN]   Diagram (antall funn) oppdatert!"
 v.logging(melding,0,1)
 
 
-html_generator(v.debug)
-melding = "<><>  HTML-SIDE OPPDATERT  <><>"
-v.logging(melding,0,1)
+#######################
+#   HTML Generator    #
+#######################
+# html_generator(v.debug)
+# melding = "<><>  HTML-SIDE OPPDATERT  <><>"
+# v.logging(melding,0,1)
 
-try:
-    # Generer HTML_forslag
-    html_generator_forslag(v.debug)
-except:
-    # Send mail på at generering feilet
-    print("FEILET: html_generator_forslag")
+# try:
+#     # Generer HTML_forslag
+#     html_generator_forslag(v.debug)
+# except:
+#     # Send mail på at generering feilet
+#     print("FEILET: html_generator_forslag")
 
 melding = "<><>  SKRIPT FERDIG  <><>"
 v.logging(melding,0,1)
