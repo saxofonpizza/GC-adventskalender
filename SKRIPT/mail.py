@@ -447,8 +447,13 @@ Dette skriptet skal ikke kjøres direkte, men importeres til et annet script!"""
         y = int(input("Hva ønsker du å kjøre? [1,2,3, osv.]: "))
         if y == 1:
             hent_mailboxes()
-            a = mail.select("'INBOX.IKKE X-Mjos'")
-            print(a)
+            print("\n\n")
+            z=1
+            while z!=0:
+                mailbox=input("Skriv inn navnet på mailboxen du ønsker å teste (uten apostrofer): ")
+                a = mail.select(f'"{mailbox}"')
+                print(f"{a}\n\n")
+                z=int(input("Ønsker du å forsøke på nytt? [0 = Nei, 1 = ja]: "))
         elif y == 2:
             print()
             mails = mail_hent_ID()
