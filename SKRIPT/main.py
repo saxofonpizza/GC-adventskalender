@@ -22,6 +22,24 @@ except:
 
 
 
+###########################
+#  Hent gyldige GC-koder  #
+###########################
+sql = """SELECT Xmjosnr, GCkode
+    FROM Utlegg
+    WHERE GCkode is not NULL"""
+DB_cursor.execute(sql)
+sql_data = DB_cursor.fetchall()
+
+GCkode_dict={}
+for x in sql_data:
+    Xmjosnr   = x[0]
+    GCkode    = x[1]
+    GCkode_dict[GCkode] = Xmjosnr
+
+
+
+
 # cnOpts = pysftp.CnOpts(knownhosts='known_hosts')         #Definerer hvor known_hosts-filen ligger i konteineren!
 
 v.debug = 0
@@ -64,7 +82,7 @@ for mailID in mailIDs:
 
     Dato_xmjos_ferdig = dt.datetime.strptime(func.Variabler['FristLogging'], '%Y-%m-%d').date()    
     if Epost_mottatt.date() <= Dato_xmjos_ferdig:                              # Er cachen logget INNEN fristen?
-        variabler = mail.hent_variabler(subject,body)                          #Hvis denne returnerer en error, vil neste if-setning kjøre da?
+        variabler = mail.hent_variabler(subject,body,GCkode_dict)                          #Hvis denne returnerer en error, vil neste if-setning kjøre da?
         melding = "[MAIN]   Variabler fra mail-script: " + str(variabler)
         v.logging(melding,0,1)
 
@@ -157,6 +175,8 @@ for mailID in mailIDs:
                 melding = v.FEIL_277
             elif variabler[0] == 278:
                 melding = v.FEIL_278
+            elif variabler[0] == 279:
+                melding = v.FEIL_279
             else:
                 melding = "UKJENT FEILKODE"
             melding = '[MAIN]   ' + f'{melding}'

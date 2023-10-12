@@ -246,7 +246,7 @@ def hent_mail_cache(debug, mailID):
             print()
 
 
-def hent_variabler(subject, body):
+def hent_variabler(subject, body,Tillatte_GCkoder):
     ##############   INFO OM .split() OG .rsplit()   ##############
     # .split() og .rsplit() benyttes for å dele en streng
     #   split-kommandoen lager en liste som har x antall items. Dette baseres på hvor mange ganger split() splitter strengen
@@ -255,147 +255,155 @@ def hent_variabler(subject, body):
     #   MAXSPLIT: .split("-", 3)    -    3 er "maxsplit"-nummeret og sier at strengen skal splittes maks 3 ganger!
     NY_eller_EKSISTERENDE_cache = subject.split(" ")
 
-    # Er denne mailen en del av X-mjøs?
-    if "x-mjøs" in subject.lower():               # Sjekker om cachen faktisk er en X-mjøs-cache!
-    # if 1 == 1:
-        # Prøv å finne riktig X-Mjøsnummer!
-        try:
-            Xmjosnr             = int(subject.split("#")[1].split("-",1)[0])
-        except:
-            try:
-                Xmjosnr             = int(subject.split("#")[1].split(" ",1)[0])
-            except:
-                try:
-                    Xmjosnr             = int(subject.split("#")[1].split(",",1)[0])
-                except:
-                    try:
-                        Xmjosnr         = int(subject.lower().split("mjøs")[1].split("-",1)[0])
-                    except:
-                        try:
-                            Xmjosnr     = int(subject.lower().split("mjøs")[1].split(" ",1)[0])
-                        except:
-                            try:
-                                Xmjosnr = int(subject.lower().split("mjøs")[1].split(",",1)[0])
-                            except:
-                                return [100]
-        melding = "[MAIL]   EMNE på mail: " + subject
-        v.logging(melding,0,1)
+    GyldigCache=0
+ 
+    melding = "[MAIL]   EMNE på mail: " + subject
+    v.logging(melding,0,1)
 
-        if NY_eller_EKSISTERENDE_cache[0] == "Ny":
-            if func.Variabler['Eksempeldata'] == 1:
-                melding = "[MAIL]   Bruker eksempeldata for ny cache"
-                v.logging(melding,0,1)
-                # ------------------------ #
-                #      Eksempeldata:
-                # ------------------------ #
-                Nick,Geocachetype,Xmjosnr,Tittel,URL_cache,Publisert = ["kattaisekken","Traditional Cache", 1, "X-Mjøs#01 - Trekatter","https://coord.info/GC9JF2","2022-12-01 14:01"]
-                # Nick,Geocachetype,Xmjosnr,Tittel,URL_cache,Publisert = ["ubraland","Multi-cache", 2, "X-Mjøs#02 - Regnstorm","https://coord.info/GC9JF2","2022-12-02 04:01"]
-                # Nick,Geocachetype,Xmjosnr,Tittel,URL_cache,Publisert = ["nittira","Traditional Cache", 3, "X-Mjøs#03 - Ansistor","https://coord.info/GC9JF2","2022-12-03 20:01"]
-                # Nick,Geocachetype,Xmjosnr,Tittel,URL_cache,Publisert = ["tiramisju","Unknown Cache", 4, "X-Mjøs#04 - Tre nøtter til Askepott","https://coord.info/GC9JF2","2022-12-04 16:03:00"]
-                URL_nick = "#Opera"
-            else:
-                melding = "[MAIL]   Denne mailen er en ny cache"
-                v.logging(melding,0,1)
-                
-                try:
-                    Nick = body.split("Opprettet av:</strong> ",1)[1].split("</li>",1)[0]
-                except:
-                    return [161]
-                
-                try:
-                    Geocachetype = body.split("Type:</strong> ",1)[1].split("</li>",1)[0]
-                except:
-                    return [162]
-                
-                try:
-                    Tittel = subject.split(" (GC")[0].rsplit(f"{Geocachetype}: ",1)[1]
-                except:
-                    return [163]
-                
-                try:
-                    URL_cache = "https://coord.info/GC" + subject.split(' (GC',1)[1].split('),', 1)[0]
-                except:        
-                    return [164]
-                
-                try:
-                    URL_nick = body.split('Navn:</strong> <a href="',1)[1].split('">',1)[0]
-                except:
-                    return [165]
-
-                # Send epost:
-
-            return 160, Nick, Xmjosnr, Tittel, URL_cache, Geocachetype, URL_nick
-
-
-        elif NY_eller_EKSISTERENDE_cache[1] =="[LOG]":          # NY_eller_EKSISTERENDE_cache er 1 fordi logger-mail blir videresendt. Derdor er plass 0 "Vs:" og plass 1 "[LOG]"
-            if func.Variabler['Eksempeldata'] == 1:
-                melding = "[MAIL]   Bruker eksempeldata for logg"
-                v.logging(melding,0,1)
-                # ------------------------ #
-                #      Eksempeldata:
-                # ------------------------ #
-                Nick,Loggtype,Dato_funnet,Xmjosnr,URL_logg,URL_nick = ['Teonline','Found it','02/12/2022','1','https://www.geocaching.com/seek/log.aspx?LUID=c0b89ddb-7674-4c06-b27e-5850defb682f','https://oracle.com']
-                # Nick,Loggtype,Dato_logget,Xmjosnr,URL_logg = ['Clown_09','Found it','15/12/2022','2','https://www.geocaching.com/seek/log.aspx?LUID=243ddc94-e556-42c5-9d24-f6c1138c0442']
-                # Nick,Loggtype,Dato_logget,Xmjosnr,URL_logg = ['Eliastm','Found it','03/12/2022','3','https://www.geocaching.com/seek/log.aspx?LUID=a01045ce-95aa-46e4-ab30-ede713ec24df']
-                # Nick,Loggtype,Dato_logget,Xmjosnr,URL_logg = ['jukejoma','Found it','04/12/2022','4','https://www.geocaching.com/seek/log.aspx?LUID=8b16a2f6-bff6-41d8-a335-1b4afca5178c']
-                # Nick,Loggtype,Dato_logget,Xmjosnr,URL_logg = ['alex543216','Found it','07/12/2022','5','https://www.geocaching.com/seek/log.aspx?LUID=bef0de36-61ce-45d2-85df-938055dfecd6']
-                # Nick,Loggtype,Dato_logget,Xmjosnr,URL_logg = ['Nubbis', 'Attended', '09/12/2022', '6', 'https://tv2.no']
-                # Nick,Loggtype,Dato_logget,Xmjosnr,URL_logg = ['Teonline','Found it','11/12/2022','7','https://vg.no']
-
-                URL_nick = "#tabata"
-            else:
-                melding = "[MAIL]   Denne mailen er en logg"
-                v.logging(melding,0,1)
-                try:
-                    Loggtype    = body.split("<strong>Loggtype:</strong> ",1)[1].split("</li>",1)[0]
-                except:
-                    return [272]
-                if Loggtype == 'Found it':
-                    try:
-                        Nick        = subject.split(" found")[0].rsplit(": ",1)[1]
-                    except:
-                        return [271]
-                elif Loggtype == "Didn't find it":
-                    try:
-                        # Nick        = subject.split(" couldn't find")[0].rsplit(": ",1)[1]
-                        Nick        = subject.split(" found")[0].rsplit(": ",1)[1]
-                    except:
-                        return [276]
-                elif Loggtype == 'Attended':
-                    try:
-                        Nick        = subject.split(" attended")[0].rsplit(": ",1)[1]
-                    except:
-                        return [277]
-                else:
-                    return [278]
-                try:
-                    Dato_funnet = body.split("<strong>Dato:</strong> ")[1].split("</li>",1)[0]
-                except:
-                    return [273]
-                try:
-                    URL_logg    = body.split('">Logg</a>:</strong>')[0].rsplit('href="',1)[1]
-                except:
-                    return [274]
-                try:
-                    URL_nick    = body.split('<strong>Logget av:</strong>', 1)[1].split('<a href="',1)[1].split('">',1)[0]
-                except:
-                    return [275]
-            return 270, Nick, Loggtype, Dato_funnet, Xmjosnr, URL_logg, URL_nick
-            # return 270, Nick, Loggtype, Dato_logget_dato, Xmjosnr, URL_logg, URL_nick
-
+    #####################################
+    #           Mail = Utlegg           #
+    #####################################
+    if NY_eller_EKSISTERENDE_cache[0] == "Ny":
+        for x in Tillatte_GCkoder:                    # Sjekker om cachen faktisk er en X-mjøs-cache!
+            if x in subject:
+                GyldigCache = 1
+                Xmjosnr = Tillatte_GCkoder[x]
+                GCkode = x
         
-        # Denne inntreffer hvis mailen klassifiseres som x-mjøs, men programmet ikke forstår om det er ny cache eller en logg 
-        else:         
+        if GyldigCache != 1: 
+            melding = "[MAIL]   Mailen er ikke en del av X-Mjøs, EMNE: " + subject
+            print(melding)
+            v.logging(melding,0,1)
+            return [0,"Dette er ikke en X-Mjøs-cache"]
+
+        if func.Variabler['Eksempeldata'] == 1:
+            melding = "[MAIL]   Bruker eksempeldata for ny cache"
+            v.logging(melding,0,1)
+            # ------------------------ #
+            #      Eksempeldata:
+            # ------------------------ #
+            Nick,Geocachetype,Xmjosnr,Tittel,URL_cache,Publisert = ["kattaisekken","Traditional Cache", 1, "X-Mjøs#01 - Trekatter","https://coord.info/GC9JF2","2022-12-01 14:01"]
+            # Nick,Geocachetype,Xmjosnr,Tittel,URL_cache,Publisert = ["ubraland","Multi-cache", 2, "X-Mjøs#02 - Regnstorm","https://coord.info/GC9JF2","2022-12-02 04:01"]
+            # Nick,Geocachetype,Xmjosnr,Tittel,URL_cache,Publisert = ["nittira","Traditional Cache", 3, "X-Mjøs#03 - Ansistor","https://coord.info/GC9JF2","2022-12-03 20:01"]
+            # Nick,Geocachetype,Xmjosnr,Tittel,URL_cache,Publisert = ["tiramisju","Unknown Cache", 4, "X-Mjøs#04 - Tre nøtter til Askepott","https://coord.info/GC9JF2","2022-12-04 16:03:00"]
+            URL_nick = "#Opera"
+        else:
+            melding = "[MAIL]   Denne mailen er en ny cache"
+            v.logging(melding,0,1)
+            
+            try:
+                Nick = body.split("Opprettet av:</strong> ",1)[1].split("</li>",1)[0]
+            except:
+                return [161]
+            
+            try:
+                Geocachetype = body.split("Type:</strong> ",1)[1].split("</li>",1)[0]
+            except:
+                return [162]
+            
+            try:
+                Tittel = subject.split(" (GC")[0].rsplit(f"{Geocachetype}: ",1)[1]
+            except:
+                return [163]
+            
+            URL_cache = f"https://coord.info/{GCkode}" 
+            # try:
+            #     URL_cache = "https://coord.info/GC" + subject.split(' (GC',1)[1].split('),', 1)[0]
+            # except:        
+            #     return [164]
+            
+            URL_nick = '#'
+
+            # Send epost:
+
+        return 160, Nick, Xmjosnr, Tittel, URL_cache, Geocachetype, URL_nick
+
+
+
+    #####################################
+    #            Mail = Logg            #
+    #####################################
+    elif NY_eller_EKSISTERENDE_cache[1] =="[LOG]":                                              # NY_eller_EKSISTERENDE_cache er 1 fordi logger-mail blir videresendt. Derdor er plass 0 "Vs:" og plass 1 "[LOG]"
+        
+        try:
+            GCkode    = "GC" + body.split("http://coord.info/GC",1)[1].split('">',1)[0]         #Finn GCkode til logg
+        except:
+            return [279]
+        
+        for x in Tillatte_GCkoder:                                                              # Sjekker om cachen faktisk er en X-mjøs-cache!
+            if x == GCkode:
+                GyldigCache = 1
+                Xmjosnr = Tillatte_GCkoder[x]
+            
+        if GyldigCache != 1: 
+            melding = "[MAIL]   Mailen er ikke en del av X-Mjøs, EMNE: " + subject
+            print(melding)
+            v.logging(melding,0,1)
+            return [0,"Dette er ikke en X-Mjøs-cache"]
+
+        if func.Variabler['Eksempeldata'] == 1:
+            melding = "[MAIL]   Bruker eksempeldata for logg"
+            v.logging(melding,0,1)
+            # ------------------------ #
+            #      Eksempeldata:
+            # ------------------------ #
+            Nick,Loggtype,Dato_funnet,Xmjosnr,URL_logg,URL_nick = ['Teonline','Found it','02/12/2022','1','https://www.geocaching.com/seek/log.aspx?LUID=c0b89ddb-7674-4c06-b27e-5850defb682f','https://oracle.com']
+            # Nick,Loggtype,Dato_logget,Xmjosnr,URL_logg = ['Clown_09','Found it','15/12/2022','2','https://www.geocaching.com/seek/log.aspx?LUID=243ddc94-e556-42c5-9d24-f6c1138c0442']
+            # Nick,Loggtype,Dato_logget,Xmjosnr,URL_logg = ['Eliastm','Found it','03/12/2022','3','https://www.geocaching.com/seek/log.aspx?LUID=a01045ce-95aa-46e4-ab30-ede713ec24df']
+            # Nick,Loggtype,Dato_logget,Xmjosnr,URL_logg = ['jukejoma','Found it','04/12/2022','4','https://www.geocaching.com/seek/log.aspx?LUID=8b16a2f6-bff6-41d8-a335-1b4afca5178c']
+            # Nick,Loggtype,Dato_logget,Xmjosnr,URL_logg = ['alex543216','Found it','07/12/2022','5','https://www.geocaching.com/seek/log.aspx?LUID=bef0de36-61ce-45d2-85df-938055dfecd6']
+            # Nick,Loggtype,Dato_logget,Xmjosnr,URL_logg = ['Nubbis', 'Attended', '09/12/2022', '6', 'https://tv2.no']
+            # Nick,Loggtype,Dato_logget,Xmjosnr,URL_logg = ['Teonline','Found it','11/12/2022','7','https://vg.no']
+
+            URL_nick = "#tabata"
+        else:
+            melding = "[MAIL]   Denne mailen er en logg"
+            v.logging(melding,0,1)
+            try:
+                Loggtype    = body.split("<strong>Loggtype:</strong> ",1)[1].split("</li>",1)[0]
+            except:
+                return [272]
+            if Loggtype == 'Found it':
+                try:
+                    Nick        = subject.split(" found")[0].rsplit(": ",1)[1]
+                except:
+                    return [271]
+            elif Loggtype == "Didn't find it":
+                try:
+                    # Nick        = subject.split(" couldn't find")[0].rsplit(": ",1)[1]
+                    Nick        = subject.split(" found")[0].rsplit(": ",1)[1]
+                except:
+                    return [276]
+            elif Loggtype == 'Attended':
+                try:
+                    Nick        = subject.split(" attended")[0].rsplit(": ",1)[1]
+                except:
+                    return [277]
+            else:
+                return [278]
+            try:
+                Dato_funnet = body.split("<strong>Dato:</strong> ")[1].split("</li>",1)[0]
+            except:
+                return [273]
+            try:
+                URL_logg    = body.split('">Logg</a>:</strong>')[0].rsplit('href="',1)[1]
+            except:
+                return [274]
+            try:
+                URL_nick    = body.split('<strong>Logget av:</strong>', 1)[1].split('<a href="',1)[1].split('">',1)[0]
+            except:
+                return [275]
+        return 270, Nick, Loggtype, Dato_funnet, Xmjosnr, URL_logg, URL_nick
+        # return 270, Nick, Loggtype, Dato_logget_dato, Xmjosnr, URL_logg, URL_nick
+
+    
+    # Denne inntreffer hvis mailen klassifiseres som x-mjøs, men programmet ikke forstår om det er ny cache eller en logg 
+    else:         
             melding = "[MAIL]   Dette er et ukjent format på en cache, EMNE: " + subject
             print(melding)
             with open(func.Variabler['filnavn_errlogg'], 'a') as f:
                 f.write(melding + "\n")
             return [0,"Ukjent format"]
-    else:
-        melding = "[MAIL]   Mailen er ikke en del av X-Mjøs, EMNE: " + subject
-        print(melding)
-        v.logging(melding,0,1)
-        return [0,"Dette er ikke en X-Mjøs-cache"]
 
 
 def flytt_mail(mail_ID, mailbox_mappe):
@@ -429,10 +437,6 @@ def mail_logout():
     mail.logout()
     print()
     print("[MAIL]   Forbindelse til mailboksen avsluttes!")
-
-
-
-
 
 
 if __name__ == "__main__":
@@ -474,3 +478,12 @@ Dette skriptet skal ikke kjøres direkte, men importeres til et annet script!"""
 else:
     if v.debug > 0:
         print('[MAIL]   Skriptet "mail" er importert på riktig måte')
+
+
+        # Lage database-forbindelse
+        try:
+            mariaDB_connection, DB_cursor = func.database_connection()
+            
+        except:
+            print("Kan ikke finne databasen!")
+            exit()

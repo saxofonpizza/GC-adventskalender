@@ -185,6 +185,7 @@ FEIL_275 = 'Variabelen "URL_nick" ble ikke hentet riktig fra denne loggen!'
 FEIL_276 = """Variabelen "Nick" på en cache med Loggtype "Didn't find it" kunne ikke hentes!"""
 FEIL_277 = 'Variabelen "Nick" på en cache med Loggtype "Attended" kunne ikke hentes!'
 FEIL_278 = "Denne loggen er ikke 'Found it', 'Didn't find it' eller 'Attended'"
+FEIL_279 = "Fant ikke GCkode i loggen"
 
 
 
