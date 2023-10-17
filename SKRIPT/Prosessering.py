@@ -154,9 +154,9 @@ def legg_til_logg(mailID, NickID, Loggtype, Dato_logget, Xmjosnr, URL_logg, Epos
         Poeng = 3
 
     data = f"""
-    INSERT INTO Logger (NickID, Loggtype, Dato_logget, Xmjosnr, URL_logg, Poeng, Epost_mottatt)
+    INSERT INTO Logger (NickID, Loggtype, Dato_logget, Xmjosnr, URL_logg, Poeng, Kommentar, Epost_mottatt)
     VALUES
-        ('{NickID}',"{Loggtype}",'{Dato_logget_dato}','{Xmjosnr}','{URL_logg}','{Poeng}', '{Epost_mottatt}')
+        ('{NickID}',"{Loggtype}",'{Dato_logget_dato}','{Xmjosnr}','{URL_logg}','{Poeng}', 'Lagt til automatisk fra mail', '{Epost_mottatt}')
     """
     #print(data)
     try:
@@ -171,8 +171,17 @@ def legg_til_logg(mailID, NickID, Loggtype, Dato_logget, Xmjosnr, URL_logg, Epos
         mail.flytt_mail(mailID, func.Variabler['mailbox_Feilet'])
         mail.slett_mail(v.debug,mailID)
         return 0
-    
 
+
+# Funksjon som oppdaterer "tid_oppdatert_poengtabell"-variabel
+def oppdater_tidspunkt():
+    sql = f"""UPDATE settings
+    SET
+        Verdi=current_timestamp()
+    WHERE
+        Variabel='tid_oppdatert_poengtabell'"""
+    DB_cursor.execute(sql)
+    mariaDB_connection.commit()
 
 if __name__ == "__main__":
     tekst = """

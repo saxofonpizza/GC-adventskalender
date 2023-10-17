@@ -104,7 +104,8 @@ for mailID in mailIDs:
                 v.logging(melding,0,1)
 
             NickID = pr.finn_NickID(Nick,URL_nick)                                                           # Finner NickID, og hvis nicket ikke er registrert før, opprettes en ID
-            pr.legg_til_NYcache(NickID, Epost_mottatt, Xmjosnr, Tittel, URL_cache, Geocachetype)        #Legger dataen i en database
+            pr.legg_til_NYcache(NickID, Epost_mottatt, Xmjosnr, Tittel, URL_cache, Geocachetype)             # Legger dataen i en database
+            pr.oppdater_tidspunkt()                                                                         # Oppdater tidspunkt for når databasen er endret
             # mail.marker_mail_lest(v.debug,mailID)
             mail.flytt_mail(mailID, func.Variabler['mailbox_Prosessert'])
             mail.slett_mail(v.debug,mailID)
@@ -132,10 +133,12 @@ for mailID in mailIDs:
                     mail.slett_mail(v.debug,mailID)
                     try:
                         # Legg til i Logg_forslag-tabellen!
-                        pr_forslag.legg_til_logg(mailID, NickID, Loggtype, Dato_funnet, Xmjosnr, URL_logg, Epost_mottatt)        #Legger dataen i en database, for forslag 2023
+                        pr_forslag.legg_til_logg(mailID, NickID, Loggtype, Dato_funnet, Xmjosnr, URL_logg, Epost_mottatt)        # Legger dataen i en database, for forslag 2023
                     except:
                         # Send mail at det ikke fungerte!
                         print("FEILET: Klarte ikke å legge til rad i Logger_forslag 2023-tabellen")
+                    pr.oppdater_tidspunkt()                                                                                     # Oppdater tidspunkt for når databasen er endret
+                    
 
                     # HTML_endret = 1
 
