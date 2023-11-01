@@ -19,6 +19,8 @@ Skriptene er fordelt over flere filer med ulik funksjonalitet. Skriptene er:
 * [Prosessering.py](#prosesseringpy)
 * [HTML_gen.py](#html_genpy)
 * [diagram.py](#diagrampy)
+* [watchlist.py](#watchlistpy)
+* [variable_tester.py](#variabletesterpy)
 
 <br>
 <br>
@@ -65,6 +67,14 @@ Kjøres dette skriptet direkte, vil et test-diagram opprettes!
 
 ### watchlist.py
 Dette skriptet legger en cache til watchlist. For å fungere trenger den autentiseringscookie.
+
+
+<br>
+<br>
+
+### variable_tester.py
+Dette skriptet tetser at variablene er satt riktig og at alle forbindelser er i orden! Hvis noen av delene i dette skriptet feiler, vil ikke kalender-programmet fungere optimalt!
+
 
 <br>
 <br>
