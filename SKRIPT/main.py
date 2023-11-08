@@ -25,7 +25,7 @@ except:
 ###########################
 #  Hent gyldige GC-koder  #
 ###########################
-sql = """SELECT Xmjosnr, GCkode
+sql = """SELECT Xmjosnr, upper(GCkode) as GCkode
     FROM Utlegg
     WHERE GCkode is not NULL"""
 DB_cursor.execute(sql)
