@@ -264,18 +264,9 @@ def hent_variabler(subject, body,Tillatte_GCkoder):
     #           Mail = Utlegg           #
     #####################################
     if NY_eller_EKSISTERENDE_cache[0] == "Ny":
-        for x in Tillatte_GCkoder:                    # Sjekker om cachen faktisk er en X-mjøs-cache!
-            if x in subject:
-                GyldigCache = 1
-                Xmjosnr = Tillatte_GCkoder[x]
-                GCkode = x
+        melding = "[MAIL]   Denne mailen er en ny cache"
+        v.logging(melding,0,1)
         
-        if GyldigCache != 1: 
-            melding = "[MAIL]   Mailen er ikke en del av X-Mjøs, EMNE: " + subject
-            print(melding)
-            v.logging(melding,0,1)
-            return [0,"Dette er ikke en X-Mjøs-cache"]
-
         if func.Variabler['Eksempeldata'] == 1:
             melding = "[MAIL]   Bruker eksempeldata for ny cache"
             v.logging(melding,0,1)
@@ -288,9 +279,17 @@ def hent_variabler(subject, body,Tillatte_GCkoder):
             # Nick,Geocachetype,Xmjosnr,Tittel,URL_cache,Publisert = ["tiramisju","Unknown Cache", 4, "X-Mjøs#04 - Tre nøtter til Askepott","https://coord.info/GC9JF2","2022-12-04 16:03:00"]
             URL_nick = "#Opera"
         else:
-            melding = "[MAIL]   Denne mailen er en ny cache"
-            v.logging(melding,0,1)
+            for x in Tillatte_GCkoder:                    # Sjekker om cachen faktisk er en X-mjøs-cache!
+                if x in subject:
+                    GyldigCache = 1
+                    Xmjosnr = Tillatte_GCkoder[x]
+                    GCkode = x
             
+            if GyldigCache != 1: 
+                melding = "[MAIL]   Mailen er ikke en del av X-Mjøs, EMNE: " + subject
+                v.logging(melding,0,1)
+                return [0,"Dette er ikke en X-Mjøs-cache"]
+
             try:
                 Nick = body.split("Opprettet av:</strong> ",1)[1].split("</li>",1)[0]
             except:
@@ -324,23 +323,9 @@ def hent_variabler(subject, body,Tillatte_GCkoder):
     #            Mail = Logg            #
     #####################################
     elif NY_eller_EKSISTERENDE_cache[1] =="[LOG]":                                              # NY_eller_EKSISTERENDE_cache er 1 fordi logger-mail blir videresendt. Derdor er plass 0 "Vs:" og plass 1 "[LOG]"
+        melding = "[MAIL]   Denne mailen er en logg"
+        v.logging(melding,0,1)
         
-        try:
-            GCkode    = "GC" + body.split("http://coord.info/GC",1)[1].split('">',1)[0]         #Finn GCkode til logg
-        except:
-            return [279]
-        
-        for x in Tillatte_GCkoder:                                                              # Sjekker om cachen faktisk er en X-mjøs-cache!
-            if x == GCkode:
-                GyldigCache = 1
-                Xmjosnr = Tillatte_GCkoder[x]
-            
-        if GyldigCache != 1: 
-            melding = "[MAIL]   Mailen er ikke en del av X-Mjøs, EMNE: " + subject
-            print(melding)
-            v.logging(melding,0,1)
-            return [0,"Dette er ikke en X-Mjøs-cache"]
-
         if func.Variabler['Eksempeldata'] == 1:
             melding = "[MAIL]   Bruker eksempeldata for logg"
             v.logging(melding,0,1)
@@ -357,8 +342,21 @@ def hent_variabler(subject, body,Tillatte_GCkoder):
 
             URL_nick = "#tabata"
         else:
-            melding = "[MAIL]   Denne mailen er en logg"
-            v.logging(melding,0,1)
+            try:
+                GCkode    = "GC" + body.split("http://coord.info/GC",1)[1].split('">',1)[0]         #Finn GCkode til logg
+            except:
+                return [279]
+            
+            for x in Tillatte_GCkoder:                                                              # Sjekker om cachen faktisk er en X-mjøs-cache!
+                if x == GCkode:
+                    GyldigCache = 1
+                    Xmjosnr = Tillatte_GCkoder[x]
+                
+            if GyldigCache != 1: 
+                melding = "[MAIL]   Mailen er ikke en del av X-Mjøs, EMNE: " + subject
+                v.logging(melding,0,1)
+                return [0,"Dette er ikke en X-Mjøs-cache"]
+        
             try:
                 Loggtype    = body.split("<strong>Loggtype:</strong> ",1)[1].split("</li>",1)[0]
             except:

@@ -101,9 +101,9 @@ def legg_til_logg(mailID, NickID, Loggtype, Dato_logget, Xmjosnr, URL_logg, Epos
     ################################################
 
     # Hvor mange dager etter utleggsdato skal det gis hhv. 3p, 2p? 1p gis de resterende dagene
-    TRE_poeng   = func.Variabler['TRE_poeng']
-    TO_poeng    = func.Variabler['TO_poeng']
-    Årets_år    = func.Variabler['Årets_år']
+    TRE_poeng   = int(func.Variabler['TRE_poeng'])
+    TO_poeng    = int(func.Variabler['TO_poeng'])
+    Årets_år    = int(func.Variabler['Årets_år'])
     Poeng       = 0                     # Må ikke fjernes eller endres!
 
     

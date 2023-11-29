@@ -22,17 +22,17 @@ def legg_til_logg(mailID, NickID, Loggtype, Dato_funnet, Xmjosnr, URL_logg, Epos
     #                                              #
     #                                              #
     ################################################
-    Intervall1_poeng = func.Variabler['Intervall1_poeng']    # Dag 1
-    Intervall2_poeng = func.Variabler['Intervall2_poeng']    # Dag 2
-    Intervall3_poeng = func.Variabler['Intervall3_poeng']    # Dag 3
-    Intervall4_poeng = func.Variabler['Intervall4_poeng']    # Dag 4
-    IntervallSTD_poeng = func.Variabler['IntervallSTD_poeng']    # Resten av desember (standardintervall), gjelder til man ikke skal få poeng 
+    Intervall1_poeng = int(func.Variabler['Intervall1_poeng'])    # Dag 1
+    Intervall2_poeng = int(func.Variabler['Intervall2_poeng'])    # Dag 2
+    Intervall3_poeng = int(func.Variabler['Intervall3_poeng'])    # Dag 3
+    Intervall4_poeng = int(func.Variabler['Intervall4_poeng'])    # Dag 4
+    IntervallSTD_poeng = int(func.Variabler['IntervallSTD_poeng'])    # Resten av desember (standardintervall), gjelder til man ikke skal få poeng 
 
     # Hvor mange dager etter utleggsdato skal poengene for hvert intervall utgis?
-    Intervall1 = func.Variabler['Intervall1']
-    Intervall2 = func.Variabler['Intervall2']
-    Intervall3 = func.Variabler['Intervall3']
-    Intervall4 = func.Variabler['Intervall4']
+    Intervall1 = int(func.Variabler['Intervall1'])
+    Intervall2 = int(func.Variabler['Intervall2'])
+    Intervall3 = int(func.Variabler['Intervall3'])
+    Intervall4 = int(func.Variabler['Intervall4'])
 
     
     if Xmjosnr == 1:
@@ -52,7 +52,7 @@ def legg_til_logg(mailID, NickID, Loggtype, Dato_funnet, Xmjosnr, URL_logg, Epos
     Intervall2_topp = Dato_funnet_dato <=   Xmjosnr_dato + dt.timedelta(days=Intervall2)      # Sann hvis cachen ble funnet innen x antall dager ETTER utleggsdato, hvor x bestemmes av Intervall2-variabelen
     Intervall3_topp = Dato_funnet_dato <=   Xmjosnr_dato + dt.timedelta(days=Intervall3)      # Sann hvis cachen ble funnet innen x antall dager ETTER utleggsdato, hvor x bestemmes av Intervall3-variabelen
     Intervall4_topp = Dato_funnet_dato <=   Xmjosnr_dato + dt.timedelta(days=Intervall4)      # Sann hvis cachen ble funnet innen x antall dager ETTER utleggsdato, hvor x bestemmes av Intervall4-variabelen
-    IntervallSTD_topp = Dato_funnet_dato <= dt.datetime.strptime(v.Dato_kalender_slutt, '%d/%m/%Y').date()  # Sann hvis cachen blir funnet FØR xmjøs-poenggiving er ferdig
+    IntervallSTD_topp = Dato_funnet_dato <= dt.datetime.strptime(func.Variabler['KonkurranseSlutt'], '%Y-%m-%d').date()  # Sann hvis cachen blir funnet FØR xmjøs-poenggiving er ferdig
     
 
     # Definerer hvor mange poeng som skal gis, basert på når cachen er funnet!
