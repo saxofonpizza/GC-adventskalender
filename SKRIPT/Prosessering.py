@@ -65,7 +65,8 @@ def legg_til_NYcache(NickID, Publisert, Xmjosnr, Tittel, URL_cache, Geocachetype
         Geocachetype = "{Geocachetype}"
     WHERE
         Xmjosnr = {Xmjosnr} and
-        Geocachetype != "Event"
+        (Geocachetype != "Event" OR
+	    Geocachetype IS NULL)
     """
     # data = f"""
     # INSERT INTO Utlegg (NickID, Publisert, Xmjosnr, Tittel, URL, Geocachetype, Poeng)

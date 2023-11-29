@@ -1,4 +1,4 @@
-# Testing av variabler!
+# Testing av variabler. Denne kan kjøres når som helst og vil ikke endre/ødelegge noe! (non-destructive script)
 Avstand_status = 50
 
 
