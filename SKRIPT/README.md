@@ -67,6 +67,7 @@ Kjøres dette skriptet direkte, vil et test-diagram opprettes!
 
 ### watchlist.py
 Dette skriptet legger en cache til watchlist. For å fungere trenger den autentiseringscookie.
+Kilde: [https://www.tutorialspoint.com/click-the-button-by-text-using-python-and-selenium](https://www.tutorialspoint.com/click-the-button-by-text-using-python-and-selenium)
 
 
 <br>
