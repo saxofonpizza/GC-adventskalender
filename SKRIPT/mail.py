@@ -279,8 +279,8 @@ def hent_variabler(subject, body,Tillatte_GCkoder):
             # Nick,Geocachetype,Xmjosnr,Tittel,URL_cache,Publisert = ["tiramisju","Unknown Cache", 4, "X-Mjøs#04 - Tre nøtter til Askepott","https://coord.info/GC9JF2","2022-12-04 16:03:00"]
             URL_nick = "#Opera"
         else:
-            for x in Tillatte_GCkoder:                    # Sjekker om cachen faktisk er en X-mjøs-cache!
-                if x in subject:
+            for x in Tillatte_GCkoder:                                  # Sjekker om cachen faktisk er en X-mjøs-cache!
+                if x.replace("0","O")  in subject.replace("0","O"):     # Gjør om 0 til O for å hindre skrivefeil i GC-kode
                     GyldigCache = 1
                     Xmjosnr = Tillatte_GCkoder[x]
                     GCkode = x
