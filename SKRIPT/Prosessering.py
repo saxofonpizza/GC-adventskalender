@@ -106,10 +106,10 @@ def legg_til_logg(mailID, NickID, Loggtype, Dato_logget, Xmjosnr, URL_logg, Epos
     Årets_år    = int(func.Variabler['Årets_år'])
     Poeng       = 0                     # Må ikke fjernes eller endres!
 
-    
-    if Xmjosnr == 1:
-        TRE_poeng   = TRE_poeng+1
-        TO_poeng    = TO_poeng+1
+    # HER KAN MAN ENDRE INTERVALLET PÅ HVOR MANGE POENG MAN FÅR ULIKE DAGER AV Å LOGGE CACHE
+    # if Xmjosnr == 1:
+    #     TRE_poeng   = TRE_poeng+1
+    #     TO_poeng    = TO_poeng+1
     
     
     # Xmjosnr     = f"{Xmjosnr}/12/2022"

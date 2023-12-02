@@ -34,12 +34,12 @@ def legg_til_logg(mailID, NickID, Loggtype, Dato_funnet, Xmjosnr, URL_logg, Epos
     Intervall3 = int(func.Variabler['Intervall3'])
     Intervall4 = int(func.Variabler['Intervall4'])
 
-    
-    if Xmjosnr == 1:
-        Intervall1   = Intervall1+1
-        Intervall2   = Intervall2+1
-        Intervall3   = Intervall3+1
-        Intervall4   = Intervall4+1
+    # HER KAN MAN ENDRE INTERVALLET PÅ HVOR MANGE POENG MAN FÅR ULIKE DAGER AV Å LOGGE CACHE
+    # if Xmjosnr == 1:
+    #     Intervall1   = Intervall1+1
+    #     Intervall2   = Intervall2+1
+    #     Intervall3   = Intervall3+1
+    #     Intervall4   = Intervall4+1
     
     # Xmjosnr     = f"{Xmjosnr}/12/2022"
     # Omgjør strings til datoformat

@@ -263,7 +263,7 @@ def hent_variabler(subject, body,Tillatte_GCkoder):
     #####################################
     #           Mail = Utlegg           #
     #####################################
-    if NY_eller_EKSISTERENDE_cache[0] == "Ny":
+    if NY_eller_EKSISTERENDE_cache[1] == "Ny":
         melding = "[MAIL]   Denne mailen er en ny cache"
         v.logging(melding,0,1)
         
