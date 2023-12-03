@@ -7,21 +7,14 @@ import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
+import functions as func
 
 # Lage database-forbindelse
 try:
-    mariaDB_connection = mariaDB.connect(
-        user      = 'root',                     # Bruker med r/w-rettigheter i databasen [std:root]
-        password  = '1234',                     # Passordet til brukeren                 [std:1234]
-        host      = 'localhost',                # IP-adresse til DB-serveren, (localhost) kan benyttes (mariaDB benyttes hvis konteineren kjører skriptene) [std:mariaDB]
-        port      =  3305,                      # Port databasen benytter seg av [std:3306]
-        database  = 'xmjos'                     # DATABASEN som inneholder alle tabellene [std:xmjos]
-    )
-
-    # Definere en cursor
-    DB_cursor = mariaDB_connection.cursor()
+    mariaDB_connection, DB_cursor = func.database_connection()
+    
 except:
-    print("[FUNC]   Kan ikke finne databasen!")
+    print("Kan ikke finne databasen!")
     exit()
 
 
