@@ -38,5 +38,6 @@ schtasks.exe /Create ^
 /TR %windir%\system32\WindowsPowerShell\v1.0\powershell.exe" -windowstyle hidden -File '%WORKDIR%\run\01-registrering.ps1'" ^
 /f  
 
+echo "For at diagram-bildet skal lastes opp til en sftp-server, må serverens public key legges til i known_hosts! Dette gjøres i /conteinerfiles/known_hosts"
 @REM Gjør så Docker åpnes ved oppstart! Egen innstilling i docker Desktop
 pause

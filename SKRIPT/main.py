@@ -235,9 +235,26 @@ for mailID in mailIDs:
 # melding = "[MAIN]   VELLYKKET opplastning"
 # v.logging(melding,0,1)
 
-
 diagram.antall_funn()
 melding = "[MAIN]   Diagram (antall funn) oppdatert!"
+v.logging(melding,0,1)
+
+# Last opp Diagrambilde til internett!
+melding = "[MAIN]   Start opplastning av diagram-bilde!"
+v.logging(melding,0,1)
+try:
+    cnOpts = pysftp.CnOpts()
+    cnOpts.hostkeys.load('known_hosts')
+
+    with pysftp.Connection(func.Variabler['sftp_hostname'], port=int(func.Variabler['sftp_port']), username=func.Variabler['sftp_username'], password=func.Variabler['sftp_password'], cnopts=cnOpts) as sftp:
+        # sftp.cwd(r"html")
+        sftp.cwd(f"{func.Variabler['sftp_mappe']}")
+        sftp.put(v.filnavn_GRAF_antall_funn_per_dag, preserve_mtime=True)
+    melding = "[MAIN]   Opplastning av diagram-bilde VELLYKKET"
+
+except Exception as error:
+    melding = f"[MAIN]   Opplastning av diagram-bilde FEILET\n[MAIN]   ERROR: {error}"
+
 v.logging(melding,0,1)
 
 
