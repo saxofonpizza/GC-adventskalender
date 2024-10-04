@@ -348,7 +348,7 @@ def hent_variabler(subject, body,Tillatte_GCkoder):
                 return [279]
             
             for x in Tillatte_GCkoder:                                                              # Sjekker om cachen faktisk er en X-mjøs-cache!
-                if x == GCkode:
+                if x.replace("0","O")  in GCkode.replace("0","O"):                                 # Gjør om 0 til O for å hindre skrivefeil i GC-kode
                     GyldigCache = 1
                     Xmjosnr = Tillatte_GCkoder[x]
                 
